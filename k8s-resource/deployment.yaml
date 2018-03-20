@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: deploy-nginx
+spec:
+  selector:
+    app: deploy-nginx
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: deploy-nginx
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: deploy-nginx
+    spec:
+      containers:
+      - name: deploy-nginx
+        image: siji/nginx:1.12.2
+        ports:
+        - containerPort: 80

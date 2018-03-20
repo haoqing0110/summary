@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-hostpath
+spec:
+  selector:
+    app: nginx-hostpath
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-hostpath
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx-hostpath
+    spec:
+      containers:
+      - name: nginx
+        image: siji/nginx:1.12.2
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: "/var/www/html"
+          name: nginx-data
+      volumes:
+      - name: nginx-data
+        persistentVolumeClaim:
+          claimName: pvc-hostpath
