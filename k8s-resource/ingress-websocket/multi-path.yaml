@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ing-nginx
+spec:
+  rules:
+  - host: hostname
+    http:
+      paths:
+      - backend:
+          serviceName: ing-nginx
+          servicePort: 8888

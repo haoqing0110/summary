@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ing-nginx
+  annotations:
+    ingress.kubernetes.io/connection-proxy-header: upgrade
+spec:
+  rules:
+  - host: hostname
+    http:
+      paths:
+      - backend:
+          serviceName: ing-nginx
+          servicePort: 8888
