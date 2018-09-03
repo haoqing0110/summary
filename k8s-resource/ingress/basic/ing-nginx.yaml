@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: ing-nginx
+  name: ing-nginx
+spec:
+  ports:
+  - name: nginx
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: ing-nginx
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: ing-nginx
+  name: ing-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: ing-nginx
+  template:
+    metadata:
+      labels:
+        run: ing-nginx
+    spec:
+      containers:
+      - image: nginx:1.8.1
+        imagePullPolicy: IfNotPresent
+        name: ing-nginx
+        ports:
+        - containerPort: 80
+          protocol: TCP

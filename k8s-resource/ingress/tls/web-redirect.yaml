@@ -4,7 +4,6 @@ metadata:
   labels:
     run: ing-nginx
   name: ing-nginx
-  namespace: default
 spec:
   ports:
   - name: nginx
@@ -21,7 +20,6 @@ metadata:
   labels:
     run: ing-nginx
   name: ing-nginx
-  namespace: default
 spec:
   replicas: 1
   selector:
@@ -33,7 +31,14 @@ spec:
         run: ing-nginx
     spec:
       containers:
-      - image: nginx:1.8.1
+#      - image: morbz/docker-web-redirect
+#        env:
+#        - name: REDIRECT_TARGET
+#          value: mydomain.net
+      - image: ianneub/redirect
+        env:
+        - name: REDIRECT
+          value: https://www.mydomain.com
         imagePullPolicy: IfNotPresent
         name: ing-nginx
         ports:

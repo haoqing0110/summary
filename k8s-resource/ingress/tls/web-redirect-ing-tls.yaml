@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ing-nginx
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  rules:
+  - host: ubuhq1.eng.platformlab.ibm.com
+    http:
+      paths:
+      - path: /s1
+        backend:
+          serviceName: ing-nginx
+          servicePort: 80
+      - path: /s2
+        backend:
+          serviceName: ing-nginx
+          servicePort: 80
+  tls:
+  - secretName: ing-tls-secret

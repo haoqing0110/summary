@@ -12,8 +12,8 @@ spec:
       - ReadWriteOnce
     persistentVolumeReclaimPolicy: Recycle
     nfs:
-      path: /var/nfs/dir1
-      server: 10.10.25.230
+      path: /root/package
+      server: 9.111.255.158
 
 ---
 kind: PersistentVolumeClaim
