@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: etcd-defrag-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: etcd
+        image: hyc-cloud-private-stable-docker-local.artifactory.swg-devops.com/ibmcom-amd64/etcd:v3.2.18
+        args:
+        - /bin/sh
+        - -c
+        - etcdctl='etcdctl --cacert=/etc/cfc/conf/etcd/ca.pem --cert=/etc/cfc/conf/etcd/client.pem --key=/etc/cfc/conf/etcd/client-key.pem';
+          export ETCDCTL_API=3;
+          for endpoint in 9.111.255.158;
+          do
+            $etcdctl --endpoints="https://${endpoint}:4001" defrag;
+            $etcdctl --endpoints="https://${endpoint}:4001" --write-out=table endpoint status;
+          done;
+          $etcdctl --endpoints="https://${endpoint}:4001" alarm disarm;
+          $etcdctl --endpoints="https://${endpoint}:4001" alarm list;
+        volumeMounts:
+        - mountPath: /etc/cfc/conf/etcd
+          name: etcd-certs
+      volumes:
+      - hostPath:
+          path: /etc/cfc/conf/etcd
+          type: ""
+        name: etcd-certs
+      restartPolicy: OnFailure
+      nodeSelector:
+        etcd: "true"
+      tolerations:
+        - key: "dedicated"
+          operator: "Exists"
+          effect: "NoSchedule"
