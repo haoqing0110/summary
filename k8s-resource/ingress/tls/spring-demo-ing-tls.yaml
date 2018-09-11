@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: spring-demo
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  rules:
+  - host: haoqing-ubu-1.eng.platformlab.ibm.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: spring-demo
+          servicePort: 8080
+  tls:
+  - hosts:
+    - haoqing-ubu-1.eng.platformlab.ibm.com
+    secretName: ing-tls-secret

@@ -1,0 +1,40 @@
+# https://github.com/haoqing0110/springboot-learning-example/tree/master/chapter-4-spring-boot-validating-form-input
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: spring-demo
+  name: spring-demo
+spec:
+  ports:
+  - name: spring
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: spring-demo
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: spring-demo
+  name: spring-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: spring-demo
+  template:
+    metadata:
+      labels:
+        run: spring-demo
+    spec:
+      containers:
+      - image: local/spring-boot-demo:latest
+        imagePullPolicy: IfNotPresent
+        name: spring-demo
+        ports:
+        - containerPort: 8080
+          protocol: TCP
