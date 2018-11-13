@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: my-nginx0
+  annotations:
+    ingress.kubernetes.io/connection-proxy-header: close
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: ubuhq1
+    http:
+      paths:
+      - backend:
+          serviceName: ing-nginx
+          servicePort: 80
+        path: /s0

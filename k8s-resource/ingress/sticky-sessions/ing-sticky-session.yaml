@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ing-nginx
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/affinity: "cookie"
+    ingress.kubernetes.io/session-cookie-name: "route"
+    ingress.kubernetes.io/session-cookie-hash: "sha1"
+spec:
+  rules:
+  - host: ubuhq1.eng.platformlab.ibm.com
+    http:
+      paths:
+      - path: /s1
+        backend:
+          serviceName: ing-nginx
+          servicePort: 80

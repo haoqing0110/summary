@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    run: ing-nginx-tls
-  name: ing-nginx-tls
+    run: ing-nginx
+  name: ing-nginx
 spec:
   ports:
   - name: nginx
@@ -11,29 +11,29 @@ spec:
     protocol: TCP
     targetPort: 80
   selector:
-    run: ing-nginx-tls
+    run: ing-nginx
   type: NodePort
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    run: ing-nginx-tls
-  name: ing-nginx-tls
+    run: ing-nginx
+  name: ing-nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: ing-nginx-tls
+      run: ing-nginx
   template:
     metadata:
       labels:
-        run: ing-nginx-tls
+        run: ing-nginx
     spec:
       containers:
       - image: nginx:1.8.1
         imagePullPolicy: IfNotPresent
-        name: ing-nginx-tls
+        name: ing-nginx
         ports:
         - containerPort: 80
           protocol: TCP
