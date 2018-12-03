@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ing-nginx-tls
+  name: ing-node-tls
   annotations:
     ingress.kubernetes.io/rewrite-target: /
     ingress.kubernetes.io/ssl-redirect: "true"
@@ -10,14 +10,14 @@ spec:
   - host: test.ibm.com
     http:
       paths:
-      - path: /s1-tls
+      - path: /n1-tls
         backend:
-          serviceName: ing-nginx-tls
-          servicePort: 80
-      - path: /s2-tls
+          serviceName: ing-node-tls
+          servicePort: 8080
+      - path: /n2-tls
         backend:
-          serviceName: ing-nginx-tls
-          servicePort: 80
+          serviceName: ing-node-tls
+          servicePort: 8080
   tls:
   - hosts:
     - test.ibm.com

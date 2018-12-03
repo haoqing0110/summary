@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: ing-ws
+  name: ing-ws
+spec:
+  ports:
+  - name: ws
+    port: 8888
+    protocol: TCP
+    targetPort: 8888
+  selector:
+    run: ing-ws
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: ing-ws
+  name: ing-ws
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: ing-ws
+  template:
+    metadata:
+      labels:
+        run: ing-ws
+    spec:
+      containers:
+      - image: hiroakis/tornado-websocket-example
+        imagePullPolicy: IfNotPresent
+        name: ing-ws
+        args:
+        - python
+        - /tmp/tornado-websocket-example/app.py
+        ports:
+        - containerPort: 8888
+          protocol: TCP

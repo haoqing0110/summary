@@ -1,12 +1,12 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ing-nginx
+  name: ing-ws
 spec:
   rules:
-  - host: hostname
+  - host: ubuhq6.eng.platformlab.ibm.com
     http:
       paths:
       - backend:
-          serviceName: ing-nginx
+          serviceName: ing-ws
           servicePort: 8888

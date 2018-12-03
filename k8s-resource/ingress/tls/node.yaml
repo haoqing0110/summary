@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: ing-node-tls
+  name: ing-node-tls
+spec:
+  ports:
+  - name: node
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: ing-node-tls
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: ing-node-tls
+  name: ing-node-tls
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: ing-node-tls
+  template:
+    metadata:
+      labels:
+        run: ing-node-tls
+    spec:
+      containers:
+      - image: local/node:latest ----> x-forwarded-host
+        imagePullPolicy: IfNotPresent
+        name: ing-node-tls
+        ports:
+        - containerPort: 8080
+          protocol: TCP
