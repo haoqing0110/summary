@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: was-app
+spec:
+  selector:
+    matchLabels:
+      run: was-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: was-app
+    spec:
+      volumes:
+      - name: app
+        hostPath:
+          type: Directory
+          path: /home/adeshmeh/test_k8s/WAS/spring
+      containers:
+      - name: was-app
+        image: websphere-liberty:springBoot2
+        ports:
+        - containerPort: 9080
+        volumeMounts:
+        - name: app
+          mountPath: /config/dropins/spring

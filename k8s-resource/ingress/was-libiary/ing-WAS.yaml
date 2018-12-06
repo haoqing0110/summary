@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-was
+  annotations:
+      # nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+  - hosts:
+    - adeshmeh-14
+  rules:
+  - host: adeshmeh-14
+    http:
+      paths:
+      - path: /home
+        backend:
+          serviceName: was-app
+          servicePort: 80
+      - path: /search
+        backend:
+          serviceName: was-app
+          servicePort: 80
