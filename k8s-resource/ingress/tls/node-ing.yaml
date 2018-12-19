@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ing-node-tls
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: ubuhq1
+    http:
+      paths:
+      - path: /n1-tls
+        backend:
+          serviceName: ing-node-tls
+          servicePort: 8080
+      - path: /n2-tls
+        backend:
+          serviceName: ing-node-tls
+          servicePort: 8080
