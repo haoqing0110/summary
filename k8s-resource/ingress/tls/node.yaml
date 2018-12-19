@@ -31,7 +31,7 @@ spec:
         run: ing-node-tls
     spec:
       containers:
-      - image: local/node:latest ----> x-forwarded-host
+      - image: haoqing/node:latest
         imagePullPolicy: IfNotPresent
         name: ing-node-tls
         ports:

@@ -18,6 +18,13 @@ export PATH=$PATH:/usr/local/go/bin
 
 go version
 ```
+### agent on mac
+```
+ssh -CfNg -D 127.0.0.1:7777 username@hostip
+```
+```
+ip:3128 root password
+```
 ### wrk
 tps
 ```
@@ -55,11 +62,21 @@ done
 ```
 ### nc (tcp/udp)
 ```
-#!/bin/bash
-while true
-do
-  nc -vz 172.29.214.22 9000 2>&1 | grep "Connection refused"
-done
+1. 调低端口释放后的等待时间，默认为60s，修改为15~30s
+sysctl -w net.ipv4.tcp_fin_timeout=30
+2. 修改tcp/ip协议配置， 通过配置/proc/sys/net/ipv4/tcp_tw_resue, 默认为0，修改为1，释放TIME_WAIT端口给新连接使用
+sysctl -w net.ipv4.tcp_timestamps=1
+3. 修改tcp/ip协议配置，快速回收socket资源，默认为0，修改为1
+sysctl -w net.ipv4.tcp_tw_recycle=1
+```
+```
+while true; do nc -vz 172.29.214.19 9000 2>&1 | grep -v "succeeded"; done
+```
+### WebSocket
+```
+https://github.com/alexanderGugel/wsd
+go get github.com/alexanderGugel/wsd
+./wsd --url ws://hostname/ws
 ```
 ### dig (dns)
 ```
@@ -92,4 +109,37 @@ remove/add etcd member
 set etcd.json to --initial-cluster-state=existing
 etcdctl3 --endpoints="https://${endpoint}:4001" member remove f0f3d76c8bf22bca
 etcdctl3 --endpoints="https://${endpoint}:4001" member add etcdxxxxx --peer-urls="https://xxxxxx:2380"
+```
+### JMeter
+download https://jmeter.apache.org/download_jmeter.cgi
+learning video https://www.youtube.com/playlist?annotation_id=annotation_916989029&feature=iv&list=PLhW3qG5bs-L-zox1h3eIL7CZh5zJmci4c&src_vid=M-iAXz8vs48
+start JMeter
+```
+cd apache-jmeter-5.0/bin
+sh jmeter.sh
+```
+### haproxy enable log
+modify /etc/rsyslog.conf
+```
+# cat /etc/rsyslog.conf | grep -e udp -e haproxy
+module(load="imudp")
+input(type="imudp" port="514")
+local3.*         /var/log/haproxy.log
+local0.*         /var/log/haproxy.log
+```
+```
+systemctl restart rsyslog
+```
+check haproxy log
+```
+cat /var/log/haproxy.log
+```
+health-check
+```
+listen icp-proxy
+    bind :80,:443
+    mode tcp
+    option tcplog
+    server server1 9.111.255.158 send-proxy check fall 3 rise 2
+    server server2 9.111.255.35 send-proxy check fall 3 rise 2
 ```
