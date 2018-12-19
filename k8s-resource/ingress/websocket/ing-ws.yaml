@@ -31,7 +31,7 @@ spec:
         run: ing-ws
     spec:
       containers:
-      - image: hiroakis/tornado-websocket-example
+      - image: haoqing/tornado-websocket-example
         imagePullPolicy: IfNotPresent
         name: ing-ws
         args:

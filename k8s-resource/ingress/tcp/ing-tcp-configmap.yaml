@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: ing-tcp
 data:
-  9000: "kube-system/ing-nginx-tcp:80"
+  9123: "kube-system/ing-tcp:9123"

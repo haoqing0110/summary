@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: ing-tcp
+  name: ing-tcp
+spec:
+  ports:
+  - name: tcp
+    port: 9123
+    protocol: TCP
+    targetPort: 9123
+  selector:
+    run: ing-tcp
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: ing-tcp
+  name: ing-tcp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: ing-tcp
+  template:
+    metadata:
+      labels:
+        run: ing-tcp
+    spec:
+      containers:
+      - image: haoqing/tcp:latest
+        imagePullPolicy: IfNotPresent
+        name: ing-tcp
+        args:
+        - /go/tcp
+        ports:
+        - containerPort: 9123
+          protocol: TCP
