@@ -6,6 +6,11 @@ openssl ciphers -V FIPS
 openssl s_client -tls1_2 -connect hostip:port
 openssl s_client -connect hostip:port
 ```
+### check server supported CipherSuites
+```
+docker run --network=host --rm -it nablac0d3/sslyze --regular 127.0.0.1:4001
+nmap --script ssl-enum-ciphers -p 4001 127.0.0.1
+```
 ### golang
 ```
 sudo apt-get update
@@ -95,20 +100,32 @@ get etcdctl
 docker run --rm -v /usr/local/bin:/data <cluster_name>.icp:8500/ibmcom/etcd:v3.2.18 cp /usr/local/bin/etcdctl /data
 alias etcdctl3="ETCDCTL_API=3 etcdctl --cacert=/etc/cfc/conf/etcd/ca.pem --cert=/etc/cfc/conf/etcd/client.pem --key=/etc/cfc/conf/etcd/client-key.pem"
 ```
-check endpoint
+check etcd cluster status
 ```
-export endpoint=<Endpoint IP address>
+export endpoint=172.29.214.11:4001,172.29.214.12:4001,172.29.214.13:4001
 
-etcdctl3 --endpoints=https://${endpoint}:4001  member list
-etcdctl3 --endpoints="https://${endpoint}:4001" endpoint health
-etcdctl3 --endpoints="https://${endpoint}:4001" --write-out=table endpoint status
-etcdctl3 --endpoints="https://${endpoint}:4001" defrag
+etcdctl3 --endpoints=${endpoint} member list
+etcdctl3 --endpoints=${endpoint} endpoint health
+etcdctl3 --endpoints=${endpoint} --write-out=table endpoint status
+```
+defrag etcd
+```
+export endpoint=172.29.214.11:4001
+etcdctl3 --endpoints="${endpoint}" defrag
 ```
 remove/add etcd member
 ```
+export endpoint=172.29.214.11:4001
 set etcd.json to --initial-cluster-state=existing
-etcdctl3 --endpoints="https://${endpoint}:4001" member remove f0f3d76c8bf22bca
-etcdctl3 --endpoints="https://${endpoint}:4001" member add etcdxxxxx --peer-urls="https://xxxxxx:2380"
+etcdctl3 --endpoints="${endpoint}" member remove f0f3d76c8bf22bca
+etcdctl3 --endpoints="${endpoint}" member add etcdxxxxx --peer-urls="https://xxxxxx:2380"
+```
+```
+etcdctl3 --endpoints="${endpoint}" get / --prefix --keys-only
+etcdctl3 --endpoints="${endpoint}" get /registry/configmaps/kube-system/helmrepo-json
+etcdctl3 --endpoints="${endpoint}" put --debug k1 v1
+curl -kv https://9.111.255.130:4001/v2/members --cert /etc/cfc/conf/etcd/client.pem --key /etc/cfc/conf/etcd/client-key.pem  --ciphers ECDHE-RSA-DES-CBC3-SHA
+curl -kv https://9.111.255.166:2380/v2/members --cert /var/lib/etcd/fixtures/peer/cert.pem --key /var/lib/etcd/fixtures/peer/key.pem
 ```
 ### JMeter
 download https://jmeter.apache.org/download_jmeter.cgi
@@ -142,4 +159,23 @@ listen icp-proxy
     option tcplog
     server server1 9.111.255.158 send-proxy check fall 3 rise 2
     server server2 9.111.255.35 send-proxy check fall 3 rise 2
+```
+### clean images
+```
+ansible all -i cluster/hosts --private-key=cluster/ssh_key -m shell -a "docker stop \$(docker ps -aq)"
+ansible all -i cluster/hosts --private-key=cluster/ssh_key -m shell -a "docker rm \$(docker ps -aq)"
+ansible all -i cluster/hosts --private-key=cluster/ssh_key -m shell -a "docker rmi \$(docker images -aq) --force"
+```
+### git tag
+```
+git push --delete origin v2.2.3
+git tag --delete v2.2.3
+git tag -a v2.2.3
+git push origin v2.2.3
+
+```
+### system information
+```
+uname -a
+cat /etc/redhat-release
 ```

@@ -29,3 +29,5 @@ alt-cmd-g	symbol-gen:generate	.platform-darwin atom-workspace
 symbols-tree-view
 
 symbols-view
+
+go-find-references
