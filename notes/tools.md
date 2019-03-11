@@ -176,11 +176,17 @@ git push --delete origin v2.2.3
 git tag --delete v2.2.3
 git tag -a v2.2.3
 git push origin v2.2.3
-
 ```
-### system information
+### git remove remote branch
 ```
-uname -a
-cat /etc/redhat-release
-ip a
+git push origin --delete <branch_name>
+```
+### artifactory
+```
+curl -H 'X-JFrog-Art-Api: xxxx' -T xxx.patch "https://na.artifactory.swg-devops.com/artifactory/hyc-cloud-private-scratch-helm-local/3.1.2-patch/xxx.patch"
+curl -H 'X-JFrog-Art-Api: xxxx' -T xxx.patch "https://na.artifactory.swg-devops.com/artifactory/hyc-cloud-private-scratch-helm-local/3.1.2-patch/xxx.patch"
+curl -H 'X-JFrog-Art-Api: xxxx' -T xx.tar.gz "https://hyc-cloud-private-scratch-docker-local.artifactory.swg-devops.com/artifactory/hyc-cloud-private-scratch-helm-virtual/3.1.1-patch/rhel/amd64/xx.tar.gz"
+```
+```
+hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/xxx-amd64:latest
 ```
