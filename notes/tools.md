@@ -127,6 +127,10 @@ etcdctl3 --endpoints="${endpoint}" put --debug k1 v1
 curl -kv https://9.111.255.130:4001/v2/members --cert /etc/cfc/conf/etcd/client.pem --key /etc/cfc/conf/etcd/client-key.pem  --ciphers ECDHE-RSA-DES-CBC3-SHA
 curl -kv https://9.111.255.166:2380/v2/members --cert /var/lib/etcd/fixtures/peer/cert.pem --key /var/lib/etcd/fixtures/peer/key.pem
 ```
+k8s
+```
+kubectl api-resources
+```
 ### JMeter
 download https://jmeter.apache.org/download_jmeter.cgi
 learning video https://www.youtube.com/playlist?annotation_id=annotation_916989029&feature=iv&list=PLhW3qG5bs-L-zox1h3eIL7CZh5zJmci4c&src_vid=M-iAXz8vs48
@@ -178,4 +182,5 @@ git push origin v2.2.3
 ```
 uname -a
 cat /etc/redhat-release
+ip a
 ```
