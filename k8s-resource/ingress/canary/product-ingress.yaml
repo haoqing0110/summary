@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: pro-nginx
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: test.ibm.com
+    http:
+      paths:
+      - path: /s1
+        backend:
+          serviceName: pro-nginx
+          servicePort: 80

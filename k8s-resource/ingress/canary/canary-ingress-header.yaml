@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: can-nginx
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/canary: "true"
+    ingress.kubernetes.io/canary-by-header: "test"
+    ingress.kubernetes.io/canary-by-header-value: "yes"
+spec:
+  rules:
+  - host: test.ibm.com
+    http:
+      paths:
+      - path: /s1
+        backend:
+          serviceName: can-nginx
+          servicePort: 80

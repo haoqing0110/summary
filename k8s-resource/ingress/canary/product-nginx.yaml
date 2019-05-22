@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: pro-nginx
+  name: pro-nginx
+spec:
+  ports:
+  - name: nginx
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: pro-nginx
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: pro-nginx
+  name: pro-nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: pro-nginx
+  template:
+    metadata:
+      labels:
+        run: pro-nginx
+    spec:
+      containers:
+      - image: nginx:1.8.1
+        imagePullPolicy: IfNotPresent
+        name: pro-nginx
+        ports:
+        - containerPort: 80
+          protocol: TCP
