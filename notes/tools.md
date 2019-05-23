@@ -5,6 +5,7 @@ openssl ciphers -V FIPS
 ```
 openssl s_client -tls1_2 -connect hostip:port
 openssl s_client -connect hostip:port
+openssl x509 -text -in kubecfg.crt
 ```
 ### check server supported CipherSuites
 ```
@@ -15,8 +16,8 @@ nmap --script ssl-enum-ciphers -p 4001 127.0.0.1
 ```
 sudo apt-get update
 sudo apt-get -y upgrade
-sudo curl -O https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz
-sudo tar -xvf go1.9.2.linux-amd64.tar.gz
+sudo curl -O https://storage.googleapis.com/golang/go1.11.linux-amd64.tar.gz
+sudo tar -xvf go1.11.linux-amd64.tar.gz
 
 sudo mv go /usr/local
 export PATH=$PATH:/usr/local/go/bin
