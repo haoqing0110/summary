@@ -1,0 +1,242 @@
+<h3 id="serviceingress">service&amp;ingress练习</h3>
+
+<ol>
+  <li>Create deployment and service</li>
+</ol>
+
+<pre><code>kubectl create -f ing-nginx.yaml
+</code></pre>
+
+<ol>
+  <li>Create ingress</li>
+</ol>
+
+<pre><code>kubectl create -f ing-multi-path.yaml
+</code></pre>
+
+<ol>
+  <li>通过pod ip访问应用</li>
+</ol>
+
+<pre><code># kubectl get pods -owide | grep ing-nginx
+ing-nginx-87654876f-c7f94         1/1     Running   0          3h55m   10.1.42.198   172.16.247.143   &lt;none&gt;
+</code></pre>
+
+<pre><code>curl http://10.1.42.198
+</code></pre>
+
+<ol>
+  <li>使用kube-dns解析service-name</li>
+</ol>
+
+<pre><code># kubectl get svc -n kube-system | grep kube-dns
+kube-dns                                      ClusterIP   10.0.0.10      &lt;none&gt;        53/UDP,53/TCP        13d
+</code></pre>
+
+<pre><code># kubectl get svc
+NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)        AGE
+ing-nginx    NodePort    10.0.11.252   &lt;none&gt;        80:30285/TCP   9h
+</code></pre>
+
+<p></p>
+
+<pre><code># dig @10.0.0.10 ing-nginx.default.svc.cluster.local
+
+; &lt;&lt;&gt;&gt; DiG 9.9.4-RedHat-9.9.4-73.el7_6 &lt;&lt;&gt;&gt; @10.0.0.10 ing-nginx.default.svc.cluster.local
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 36140
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;ing-nginx.default.svc.cluster.local. IN        A
+
+;; ANSWER SECTION:
+ing-nginx.default.svc.cluster.local. 5 IN A     10.0.11.252 &lt;======== clusterIP
+
+;; Query time: 0 msec
+;; SERVER: 10.0.0.10#53(10.0.0.10)
+;; WHEN: Mon Apr 22 05:03:42 PDT 2019
+;; MSG SIZE  rcvd: 115
+</code></pre>
+
+<ol>
+  <li>通过service ClusterIP访问应用</li>
+</ol>
+
+<pre><code>curl http://10.0.11.252
+</code></pre>
+
+<ol>
+  <li>通过service NodePort访问</li>
+</ol>
+
+<pre><code>curl http://&lt;node-ip&gt;:30285
+</code></pre>
+
+<ol>
+  <li>通过ingress访问</li>
+</ol>
+
+<pre><code># kubectl get ing
+NAME        HOSTS          ADDRESS        PORTS   AGE
+ing-nginx   test.ibm.com   9.30.222.128   80      9h
+</code></pre>
+
+<pre><code>curl http://test.ibm.com/s2
+</code></pre>
+
+<ol>
+  <li>创建networkpolicy</li>
+</ol>
+
+<pre><code>kubectl create -f networkpolicy.yaml
+</code></pre>
+
+<pre><code>curl http://10.1.42.198
+</code></pre>
+
+<h3 id="pvpvc">pv&amp;pvc练习</h3>
+
+<ol>
+  <li>Create pv-hostpath, pv2-hostpath</li>
+</ol>
+
+<pre><code>mkdir -p /hostpath/pv
+mkdir -p /hostpath/pv2
+</code></pre>
+
+<pre><code>kubectl create -f pv-hostpath.yaml
+kubectl create -f pv2-hostpath.yaml
+</code></pre>
+
+<ol>
+  <li>Create pvc</li>
+</ol>
+
+<pre><code>kubectl create -f pvc-hostpath.yaml
+</code></pre>
+
+<ol>
+  <li>检查pvc和pv的状态</li>
+</ol>
+
+<pre><code>kubectl get pv
+kubectl get pvc
+</code></pre>
+
+<ol>
+  <li>Create deployment nginx-hostpath</li>
+</ol>
+
+<pre><code>kubectl create -f nginx-hostpath.yaml
+</code></pre>
+
+<pre><code># kubectl get pods | grep nginx-hostpath
+nginx-hostpath-74b7849f9f-m5dvl   1/1     Running   0          9h
+</code></pre>
+
+<ol>
+  <li>进入nginx-hostpath-74b7849f9f-m5dvl中，随意在mount的目录中touch一些测试文件，退出container。</li>
+</ol>
+
+<pre><code># kubectl exec -it nginx-hostpath-74b7849f9f-m5dvl sh
+# cd /var/www/html
+# touch aaa bbb
+# ls
+aaa  bbb
+# exit
+</code></pre>
+
+<ol>
+  <li>检查目录/hostpath/pv2</li>
+</ol>
+
+<pre><code># ls /hostpath/pv2/
+aaa  bbb
+</code></pre>
+
+<h3 id="image">image练习</h3>
+
+<ol>
+  <li>Docker login</li>
+</ol>
+
+<pre><code>docker login mycluster.icp:8500
+</code></pre>
+
+<ol>
+  <li>Docker tag</li>
+</ol>
+
+<pre><code>docker pull hello-world
+</code></pre>
+
+<pre><code>docker tag hello-world:latest mycluster.icp:8500/default/hello-world:0.1
+</code></pre>
+
+<ol>
+  <li>Docker push</li>
+</ol>
+
+<pre><code>docker push mycluster.icp:8500/default/hello-world:0.1
+</code></pre>
+
+<ol>
+  <li>验证docker pull
+    先删除本地image mycluster.icp:8500/default/hello-world:0.1</li>
+</ol>
+
+<pre><code>docker rmi mycluster.icp:8500/default/hello-world:0.1
+</code></pre>
+
+<p>docker pull</p>
+
+<pre><code>docker pull mycluster.icp:8500/default/hello-world:0.1
+</code></pre>
+
+<h3 id="helm">helm练习</h3>
+
+<ol>
+  <li>打包Helm Chart</li>
+</ol>
+
+<pre><code>helm create demoapp
+</code></pre>
+
+<pre><code>tree demoapp
+</code></pre>
+
+<pre><code>helm package demoapp ; ls -l
+</code></pre>
+
+<ol>
+  <li>将Chart添加到内部存储库</li>
+</ol>
+
+<pre><code>cloudctl login -a https://&lt;cluster_CA_domain&gt;:8443 --skip-ssl-validation
+</code></pre>
+
+<pre><code>cloudctl catalog load-chart --archive demoapp-0.1.0.tgz
+</code></pre>
+
+<h3 id="">相关连接</h3>
+
+<p>网络管理
+  https://www.ibm.com/support/knowledgecenter/SSBS6K<em>3.1.2/manage</em>network/network.html
+  存储管理
+  https://www.ibm.com/support/knowledgecenter/SSBS6K<em>3.1.2/manage</em>cluster/cluster<em>storage.html
+    日志管理
+    https://www.ibm.com/support/knowledgecenter/SSBS6K</em>3.1.2/manage<em>metrics/logging</em>elk.html
+  监控告警
+  https://www.ibm.com/support/knowledgecenter/SSBS6K<em>3.1.2/manage</em>metrics/monitoring<em>service.html
+    镜像仓库管理
+    https://www.ibm.com/support/knowledgecenter/SSBS6K</em>3.1.2/manage<em>images/using</em>docker<em>cli.html
+    应用商店
+    https://www.ibm.com/support/knowledgecenter/SSBS6K</em>3.1.2/app<em>center/create</em>release.html
+  https://www.ibm.com/support/knowledgecenter/SSBS6K<em>3.1.2/app</em>center/add<em>package.html#package</em>chart
+  多租户管理
+  https://www.ibm.com/support/knowledgecenter/SSBS6K<em>3.1.2/user</em>management/iso_icp.html</p>
