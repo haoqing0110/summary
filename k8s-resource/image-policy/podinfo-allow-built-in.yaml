@@ -1,0 +1,19 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: podinfo-allow-built-in
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: podinfo
+    spec:
+      containers:
+      - name: built-in
+        image: nginx:1.14
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
