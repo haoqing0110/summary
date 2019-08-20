@@ -1,0 +1,12 @@
+---
+apiVersion: securityenforcement.admission.cloud.ibm.com/v1beta1
+kind: ImagePolicy
+metadata:
+  name: policy-va-enable
+  namespace: default
+spec:
+   repositories:
+    - name: "mycluster.icp:8500/default/*"
+      policy:
+        va:
+          enabled: true
