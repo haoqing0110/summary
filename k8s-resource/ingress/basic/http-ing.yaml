@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ing-http
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - host: hq-icp-rhel3
+    http:
+      paths:
+      - path: /p1
+        backend:
+          serviceName: http-svc
+          servicePort: 80
