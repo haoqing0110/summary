@@ -1,0 +1,21 @@
+apiVersion: v1
+items:
+- apiVersion: operator.openshift.io/v1
+  kind: IngressController
+  metadata:
+    name: common-service
+    namespace: openshift-ingress-operator
+  spec:
+    domain: cs.hq-ocp-ha.os.fyre.ibm.com
+    nodePlacement:
+      nodeSelector:
+        matchLabels:
+          node-role.kubernetes.io/worker: ""
+    namespaceSelector:
+      matchLabels:
+        type: sharded
+  status: {}
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
