@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: nginx-svc
+  name: nginx-svc
+spec:
+  ports:
+  - name: nginx
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: nginx-svc
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: nginx-svc
+  name: nginx-svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: nginx-svc
+  template:
+    metadata:
+      labels:
+        run: nginx-svc
+    spec:
+      containers:
+      - image: nginx:1.8.1
+        imagePullPolicy: IfNotPresent
+        name: nginx-svc
+        ports:
+        - containerPort: 80
+          protocol: TCP

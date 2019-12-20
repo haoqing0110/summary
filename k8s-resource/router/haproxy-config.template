@@ -38,7 +38,7 @@ global
 {{- if ne "" (firstMatch "[1-9][0-9]*" $threads) }}
   nbthread {{ $threads }}
 {{-  end }}
-  lua-load ./hello.lua
+  lua-load /var/lib/haproxy/conf/lua/hello.lua
 
 
 

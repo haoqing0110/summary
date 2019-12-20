@@ -1,0 +1,16 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: http-route
+  namespace: default
+spec:
+  path: /h2
+  port:
+    targetPort: 8080
+  subdomain: ""
+  to:
+    kind: Service
+    name: http-svc
+    weight: 100
+  wildcardPolicy: None
+status: {}
