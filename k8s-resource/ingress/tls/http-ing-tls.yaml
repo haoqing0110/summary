@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ing-http-tls
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - host: xxxx
+    http:
+      paths:
+      - path: /p1
+        backend:
+          serviceName: http-svc
+          servicePort: 80
+  tls:
+  - hosts:
+    - xxxxxx
+    secretName: ing-tls-secret
