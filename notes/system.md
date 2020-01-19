@@ -119,3 +119,44 @@ firewall-cmd --reload
 ```
 https://github.com/shadowsocks/ShadowsocksX-NG/releases
 ```
+### system debug
+system message
+```
+/var/log/messages
+```
+system info
+```
+top
+```
+```
+df -h
+df -i
+```
+```
+lsof -p <pid>
+0 0,6,12,18 * * * date >> /root/lsof.txt ; lsof -p 1433 >> /root/lsof.txt
+```
+```
+# cat icp_io_corn.sh
+#!/bin/bash
+echo "==========================="`date`"==========================="
+/usr/sbin/iotop -botqqqk --iter=5
+iostat
+```
+```
+*/10 * * * * /path/to/icp_io_corn.sh >> /var/log/icp_io.log 2>&1
+```
+```
+# cat icp_net_corn.sh
+#!/bin/bash
+echo "==========================="`date`"==========================="
+ping -c3 172.29.214.11
+ping -c3 172.29.214.12
+```
+```
+*/10 * * * * /path/to/icp_net_corn.sh >> /var/log/icp_net.log 2>&1
+```
+### docker issues
+mkdir /sys/fs/cgroup/memory/kubepods/besteffort/pod2f526c27-8bb7-11e9-9ae7-00505681a97f: cannot allocate memory`, it's a kernel bug in 3.10.x. The issue was triggered because of high frequency of create/delete docker container on the node. See https://github.com/moby/moby/issues/29638, https://github.ibm.com/IBMPrivateCloud/roadmap/issues/23245
+### api
+https://www.ibm.com/support/knowledgecenter/SSBS6K_3.2.0/apis/access_api.html

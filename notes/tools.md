@@ -7,17 +7,32 @@ openssl s_client -tls1_2 -connect hostip:port
 openssl s_client -connect hostip:port
 openssl x509 -text -in kubecfg.crt
 ```
+check pem
+```
+openssl x509 -in certificate.pem -text -noout
+openssl x509 -in certificate.der -inform der -text -noout
+```
+check cert
+```
+openssl x509 -in /etc/cfc/conf/ca.crt  -text -noout
+```
+check key
+```
+openssl rsa -in mykey.key -text -noout
+```
 ### check server supported CipherSuites
 ```
 docker run --network=host --rm -it nablac0d3/sslyze --regular 127.0.0.1:4001
+rpm -vhU https://nmap.org/dist/nmap-7.70-1.x86_64.rpm
 nmap --script ssl-enum-ciphers -p 4001 127.0.0.1
+nmap -Pn -sS -p4001 --script ssl-enum-ciphers 172.16.191.235
 ```
 ### golang
 ```
 sudo apt-get update
 sudo apt-get -y upgrade
-sudo curl -O https://storage.googleapis.com/golang/go1.11.linux-amd64.tar.gz
-sudo tar -xvf go1.11.linux-amd64.tar.gz
+sudo curl -O https://storage.googleapis.com/golang/go1.13.linux-amd64.tar.gz
+sudo tar -xvf go1.13.linux-amd64.tar.gz
 
 sudo mv go /usr/local
 export PATH=$PATH:/usr/local/go/bin
@@ -30,6 +45,17 @@ ssh -CfNg -D 127.0.0.1:7777 username@hostip
 ```
 ```
 ip:3128 root password
+```
+### api-server
+```
+kubectl api-resources --verbs=list --namespaced -o name
+```
+```
+kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl get --show-kind --show-all --ignore-not-found -n <terminating-namespace>
+```
+### rbac
+```
+kubectl auth can-i create image --namespace richhall
 ```
 ### wrk
 tps
@@ -109,6 +135,12 @@ etcdctl3 --endpoints=${endpoint} member list
 etcdctl3 --endpoints=${endpoint} endpoint health
 etcdctl3 --endpoints=${endpoint} --write-out=table endpoint status
 ```
+compact
+```
+export endpoint=172.29.214.11:4001
+$ rev=$(etcdctl3 --endpoints=${endpoint} endpoint status --write-out="json" | egrep -o '"revision":[0-9]*' | egrep -o '[0-9].*')
+etcdctl3 --endpoints=${endpoint} compact $rev
+```
 defrag etcd
 ```
 export endpoint=172.29.214.11:4001
@@ -127,6 +159,51 @@ etcdctl3 --endpoints="${endpoint}" get /registry/configmaps/kube-system/helmrepo
 etcdctl3 --endpoints="${endpoint}" put --debug k1 v1
 curl -kv https://9.111.255.130:4001/v2/members --cert /etc/cfc/conf/etcd/client.pem --key /etc/cfc/conf/etcd/client-key.pem  --ciphers ECDHE-RSA-DES-CBC3-SHA
 curl -kv https://9.111.255.166:2380/v2/members --cert /var/lib/etcd/fixtures/peer/cert.pem --key /var/lib/etcd/fixtures/peer/key.pem
+```
+[benchmark](https://github.com/etcd-io/etcd/tree/master/tools/benchmark)
+```
+go get go.etcd.io/etcd/tools/benchmark
+```
+```
+alias benchmark="benchmark --cacert /etc/cfc/conf/etcd/ca.pem --cert /etc/cfc/conf/etcd/client.pem --key /etc/cfc/conf/etcd/client-key.pem"
+```
+write
+```
+export endpoint=172.16.188.54:4001
+benchmark --endpoints=${endpoint} --target-leader --conns=1 --clients=1 put --key-size=8 --sequential-keys --total=10000 --val-size=256
+benchmark --endpoints=${endpoint} --target-leader  --conns=100 --clients=1000 put --key-size=8 --sequential-keys --total=100000 --val-size=256
+```
+```
+export endpoints=xxx:4001,xxx:4001,xxx:4001
+benchmark --endpoints=${endpoints} --conns=100 --clients=1000 put --key-size=8 --sequential-keys --total=100000 --val-size=256
+```
+read
+```
+export endpoints=xxx:4001,xxx:4001,xxx:4001
+benchmark --endpoints=${endpoints} --conns=1 --clients=1 range YOUR_KEY --consistency=l --total=10000
+benchmark --endpoints=${endpoints} --conns=1 --clients=1 range YOUR_KEY --consistency=s --total=10000
+/registry/services/endpoints/kube-system/kube-scheduler
+```
+```
+export endpoints=xxx:4001,xxx:4001,xxx:4001
+benchmark --endpoints=${endpoints} --conns=100 --clients=1000 range YOUR_KEY --consistency=l --total=100000
+benchmark --endpoints=${endpoints} --conns=100 --clients=1000 range YOUR_KEY --consistency=s --total=100000
+```
+[fio](https://www.ibm.com/cloud/blog/using-fio-to-tell-whether-your-storage-is-fast-enough-for-etcd)
+```
+wget https://github.com/axboe/fio/archive/fio-3.14.tar.gz
+tar -zxvf fio-3.14.tar.gz
+cd fio-fio-3.14
+./configure
+make
+make install
+```
+```
+fio --rw=write --ioengine=sync --fdatasync=1 --directory=/var/lib/etcd/ --size=22m --bs=2300 --name=mytest
+```
+metrics
+```
+curl -L https://xxx:4001/metrics --cacert "/etc/cfc/conf/etcd/ca.pem" --cert "/etc/cfc/conf/etcd/client.pem" --key "/etc/cfc/conf/etcd/client-key.pem"
 ```
 k8s
 ```
@@ -190,4 +267,14 @@ curl -H 'X-JFrog-Art-Api: xxxx' -T xx.tar.gz "https://hyc-cloud-private-scratch-
 ```
 ```
 hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/xxx-amd64:latest
+```
+https://www.ibm.com/support/knowledgecenter/SSBS6K_3.2.0/apis/k8s_api.html
+```
+kubectl -n kube-system get secret |grep default
+kubectl -n kube-system get secret default-token-7s7xz -o yaml
+echo xxx | base64 -d
+curl -k -H "Authorization:Bearer $ID_TOKEN"  https://<Cluster Master Host>:<Kubernetes API Port>/api/v1/namespaces/default/pods
+
+cloudctl tokens
+kubectl auth can-i get image --namespace default
 ```
