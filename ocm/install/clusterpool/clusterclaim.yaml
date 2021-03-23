@@ -1,0 +1,11 @@
+apiVersion: hive.openshift.io/v1
+kind: ClusterClaim
+metadata:
+ name: haoqing-demo
+ namespace: acm-observability-china
+spec:
+ clusterPoolName: obs-china-aws-4616
+ subjects:
+ - apiGroup: rbac.authorization.k8s.io
+   kind: Group
+   name: Core-Services
