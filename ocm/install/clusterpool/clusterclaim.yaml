@@ -1,8 +1,10 @@
 apiVersion: hive.openshift.io/v1
 kind: ClusterClaim
 metadata:
- name: haoqing-demo
+ name: qhao
  namespace: acm-observability-china
+ labels:
+   do-not-delete: "true"
 spec:
  clusterPoolName: obs-china-aws-4616
  subjects:
