@@ -2,7 +2,7 @@
 #Refer to https://github.com/songleo/songleo.github.io/blob/master/_posts/clusterpool-share.md
 oc get ClusterClaim.hive.openshift.io
 
-deploy_ns=$(oc describe -f clusterclaim.yaml | grep Namespace | grep obs-china-aws | awk '{print $2}')
+deploy_ns=$(oc describe -f $1 | grep Namespace | grep obs-china-aws | awk '{print $2}')
 kubeconfig_secret=$(oc get clusterdeployment -n ${deploy_ns} ${deploy_ns} -oyaml | grep adminKubeconfigSecretRef -A 1 | grep obs-china-aws |  awk '{print $2}')
 password_secret=$(oc get clusterdeployment -n ${deploy_ns} ${deploy_ns} -oyaml | grep adminPasswordSecretRef -A 1 | grep obs-china-aws |  awk '{print $2}')
 

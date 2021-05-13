@@ -1,0 +1,13 @@
+apiVersion: hive.openshift.io/v1
+kind: ClusterClaim
+metadata:
+ name: qhao-sno
+ namespace: acm-observability-china
+ labels:
+   do-not-delete: "true"
+spec:
+ clusterPoolName: obs-china-aws-480-sno
+ subjects:
+ - apiGroup: rbac.authorization.k8s.io
+   kind: Group
+   name: Core-Services
