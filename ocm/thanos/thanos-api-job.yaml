@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: thano-api
+  namespace: open-cluster-management-observability
+spec:
+  template:
+    metadata:
+      name: thano-api
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - /wrk.sh
+        image: quay.io/haoqing/wrk:latest
+        imagePullPolicy: Always
+        name: wrk
