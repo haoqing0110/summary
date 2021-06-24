@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: thano-api
+  name: thanos-api
   namespace: open-cluster-management-observability
 spec:
   template:
     metadata:
-      name: thano-api
+      name: thanos-api
     spec:
       restartPolicy: OnFailure
       containers:
