@@ -1,6 +1,6 @@
 #/bin/bash
 #DOMAIN="https://multicloud-console.apps.obs-china-aws-4616-64sjs.dev05.red-chesterfield.com/observability-query"
-#HEAD="Authorization: Bearer sha256~QlVYe36mpe1yLWY5XoM1aTizAAPqtNoIYKpJeCLhsAw"
+#HEAD="Authorization: Bearer sha256~xxx"
 DOMAIN="${DOMAIN:-http://observability-thanos-query-frontend.open-cluster-management-observability.svc:9090}"
 
 if [[ -z "${HEAD}" ]]; then
