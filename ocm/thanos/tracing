@@ -1,7 +1,7 @@
         - |-
           --tracing.config=type: JAEGER
           config:
-            service_name: "observability-thanos-store-shard-2"
-            endpoint: "http://jaeger-all-in-one-inmemory-collector.openshift-operators.svc.cluster.local:14268"
+            service_name: "thanos-query-frontend"
+            endpoint: "http://jaeger-all-in-one-inmemory-collector.jaeger.svc.cluster.local:14268/api/traces"
             reporter_log_spans: true
             sampler_param: 1
