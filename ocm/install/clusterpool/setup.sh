@@ -1,10 +1,11 @@
 #!/bin/bash
 #Refer to https://github.com/songleo/songleo.github.io/blob/master/_posts/clusterpool-share.md
+prefix=server-foundation-aws
 oc get ClusterClaim.hive.openshift.io
 
-deploy_ns=$(oc describe -f $1 | grep Namespace | grep obs-china-aws | awk '{print $2}')
-kubeconfig_secret=$(oc get clusterdeployment -n ${deploy_ns} ${deploy_ns} -oyaml | grep adminKubeconfigSecretRef -A 1 | grep obs-china-aws |  awk '{print $2}')
-password_secret=$(oc get clusterdeployment -n ${deploy_ns} ${deploy_ns} -oyaml | grep adminPasswordSecretRef -A 1 | grep obs-china-aws |  awk '{print $2}')
+deploy_ns=$(oc describe -f $1 | grep Namespace | grep $prefix | awk '{print $2}')
+kubeconfig_secret=$(oc get clusterdeployment -n ${deploy_ns} ${deploy_ns} -oyaml | grep adminKubeconfigSecretRef -A 1 | grep $prefix |  awk '{print $2}')
+password_secret=$(oc get clusterdeployment -n ${deploy_ns} ${deploy_ns} -oyaml | grep adminPasswordSecretRef -A 1 | grep $prefix |  awk '{print $2}')
 
 # get kubeconfig
 oc get secret ${kubeconfig_secret} -n ${deploy_ns} -o 'go-template={{index .data "kubeconfig"}}' | base64 --decode > /tmp/kubeconfig

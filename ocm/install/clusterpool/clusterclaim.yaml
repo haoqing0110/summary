@@ -2,12 +2,10 @@ apiVersion: hive.openshift.io/v1
 kind: ClusterClaim
 metadata:
  name: qhao
- namespace: acm-observability-china
- labels:
-   do-not-delete: "true"
+ namespace: server-foundation
 spec:
- clusterPoolName: obs-china-aws-4616
+ clusterPoolName: server-foundation-aws
  subjects:
  - apiGroup: rbac.authorization.k8s.io
    kind: Group
-   name: Core-Services
+   name: Server Foundation
