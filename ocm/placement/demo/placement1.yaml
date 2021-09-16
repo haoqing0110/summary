@@ -2,15 +2,14 @@ apiVersion: cluster.open-cluster-management.io/v1alpha1
 kind: Placement
 metadata:
   name: placement1
-  namespace: demo
+  namespace: demo-hq
 spec:
   numberOfClusters: 1
   prioritizerPolicy:
-#    mode: Additive
     configurations:
       - name: ResourceRatioCPU
-        weight: 1
-#      - name: Balance
-#        weight: 1
-#      - name: Steady
-#        weight: 1
+  predicates:
+    - requiredClusterSelector:
+        labelSelector:
+          matchLabels:
+            cluster.open-cluster-management.io/clusterset: demo-hqq
