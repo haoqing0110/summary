@@ -62,9 +62,9 @@ func main() {
 
 	}
 
-	if update && len(namespace) > 0 && len(cluster) > 0 && len(rs) > 0 {
+	if update && len(cluster) > 0 && len(rs) > 0 {
 		r := strings.Split(rs, ",")
-		if err := UpdateClusterWithResources(r, cluster, namespace); err != nil {
+		if err := UpdateClusterWithResources(r, cluster); err != nil {
 			fmt.Printf("%s \n", err)
 		}
 	}
@@ -145,7 +145,7 @@ func CreateCluster(clusterName, clusterSetName string) error {
 	return nil
 }
 
-func UpdateClusterWithResources(res []string, clusterName, namespace string) error {
+func UpdateClusterWithResources(res []string, clusterName string) error {
 	var err error
 	var mc *clusterapiv1.ManagedCluster
 
@@ -160,6 +160,12 @@ func UpdateClusterWithResources(res []string, clusterName, namespace string) err
 	allocatable[clusterapiv1.ResourceMemory], err = resource.ParseQuantity(res[2])
 	capacity[clusterapiv1.ResourceCPU], err = resource.ParseQuantity(res[1])
 	capacity[clusterapiv1.ResourceMemory], err = resource.ParseQuantity(res[3])
+	if len(res) >= 5 {
+		capacity["core_worker"], err = resource.ParseQuantity(res[4])
+	}
+	if len(res) >= 6 {
+		capacity["socket_worker"], err = resource.ParseQuantity(res[5])
+	}
 
 	mc.Status = clusterapiv1.ManagedClusterStatus{
 		Allocatable: allocatable,
