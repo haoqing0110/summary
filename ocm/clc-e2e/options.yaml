@@ -1,0 +1,14 @@
+#Resource prefix, priority:
+# 1. From command-line
+# 2. From options.yaml
+# 3. Using the $USER environment variable.
+# 4. Default: ginkgo
+options: 
+  owner: owner
+  #hub information
+  hub:
+    name: obs-china-aws-4616-xxx
+    user: kubeadmin
+    password: xxxx
+    baseDomain: dev05.red-chesterfield.com
+    kubecontext: default/api-obs-china-aws-4616-xxx-dev05-red-chesterfield-com:6443/kube:admin
