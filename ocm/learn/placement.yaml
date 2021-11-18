@@ -1,0 +1,10 @@
+apiVersion: cluster.open-cluster-management.io/v1alpha1
+kind: Placement
+metadata:
+  name: placement1
+  namespace: demo
+spec:
+  numberOfClusters: 1
+  prioritizerPolicy:
+    configurations:
+      - name: CustomizeResourceAllocatableMemory
