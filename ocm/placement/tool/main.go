@@ -107,7 +107,7 @@ func CreateClusterSetBinding(clusterSetName, namespace string) error {
 		},
 	}
 	if _, err := clusterClient.ClusterV1alpha1().ManagedClusterSets().Create(context.Background(), clusterset, metav1.CreateOptions{}); err != nil {
-		return err
+		fmt.Printf("ManagedClusterSets %s created failed: %s\n", clusterSetName, err)
 	}
 	fmt.Printf("ClusterSet %s created \n", clusterSetName)
 
@@ -121,7 +121,7 @@ func CreateClusterSetBinding(clusterSetName, namespace string) error {
 		},
 	}
 	if _, err := clusterClient.ClusterV1alpha1().ManagedClusterSetBindings(namespace).Create(context.Background(), csb, metav1.CreateOptions{}); err != nil {
-		return err
+		fmt.Printf("ManagedClusterSetBindings %s created failed: %s\n", clusterSetName, err)
 	}
 	fmt.Printf("ClusterSetBinding %s created in namespace %s \n", clusterSetName, namespace)
 	return nil

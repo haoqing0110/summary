@@ -61,6 +61,7 @@ func main() {
 	defer ticker.Stop()
 	go UpdateClusterScores(clusters, scores, resourceName, interval)
 
+	time.Sleep(time.Duration(30) * time.Minute)
 }
 
 func initKubeRealEnv() error {
