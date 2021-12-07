@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -32,10 +33,11 @@ var resourceName string
 func init() {
 	flag.BoolVar(&clean, "clean", false, "cluster name")
 
+	flag.StringVar(&resourceName, "crname", "demo", "resource name")
+	flag.IntVar(&interval, "interval", 1, "update interval minutes")
+
 	flag.StringVar(&clusters, "clusters", "", "cluster names")
-	flag.StringVar(&resourceName, "n", "demo", "cluster names")
-	//	flag.StringVar(&scores, "scores", "", "cluster scores")
-	flag.IntVar(&interval, "i", 1, "update interval")
+	flag.StringVar(&scores, "scores", "", "cluster scores")
 }
 
 func main() {
@@ -57,7 +59,7 @@ func main() {
 	// update
 	ticker := time.NewTicker(time.Duration(interval) * time.Minute)
 	defer ticker.Stop()
-	go UpdateClusterScores(clusters, resourceName, interval)
+	go UpdateClusterScores(clusters, scores, resourceName, interval)
 
 }
 
@@ -113,38 +115,63 @@ func CleanClusterScores(clusters, resourceName string) {
 	}
 }
 
-func UpdateClusterScores(clusters, resourceName string, interval int) {
+func UpdateClusterScores(clusters, scores, resourceName string, interval int) {
 	// get cluster names
 	clusternames := getManagedClusterNames(clusters)
+	scoreStrs := strings.Split(scores, ",")
 
 	// update scores periodically
-	for _, c := range clusternames {
+	for i, c := range clusternames {
 		addOnPlacementScore, err := clusterClient.ClusterV1alpha1().AddOnPlacementScores(c).Get(context.Background(), resourceName, metav1.GetOptions{})
 		if err != nil {
 			klog.Errorf("err: %s", err)
 		}
 
-		addOnPlacementScore.Status = clusterapiv1alpha1.AddOnPlacementScoreStatus{
-			Conditions: []metav1.Condition{
-				{
-					Type:               "AddOnPlacementScoresUpdated",
-					Status:             "True",
-					Reason:             "AddOnPlacementScoresUpdated",
-					Message:            "AddOnPlacementScores updated successfully",
-					LastTransitionTime: metav1.NewTime(time.Now()),
+		if len(clusternames) == len(scoreStrs) {
+			intVar, _ := strconv.Atoi(scoreStrs[i])
+
+			addOnPlacementScore.Status = clusterapiv1alpha1.AddOnPlacementScoreStatus{
+				Conditions: []metav1.Condition{
+					{
+						Type:               "AddOnPlacementScoresUpdated",
+						Status:             "True",
+						Reason:             "AddOnPlacementScoresUpdated",
+						Message:            "AddOnPlacementScores updated successfully",
+						LastTransitionTime: metav1.NewTime(time.Now()),
+					},
 				},
-			},
-			Scores: []clusterapiv1alpha1.AddOnPlacementScoreItem{
-				{
-					Name:  "cpuratio",
-					Value: int32(rand.Intn(100)),
+				Scores: []clusterapiv1alpha1.AddOnPlacementScoreItem{
+					{
+						Name:  "customized",
+						Value: int32(intVar),
+					},
 				},
-				{
-					Name:  "memoryratio",
-					Value: int32(rand.Intn(100)),
+				ValidUntil: &metav1.Time{Time: time.Now().Add(time.Duration(interval) * time.Minute)},
+			}
+
+		} else {
+			addOnPlacementScore.Status = clusterapiv1alpha1.AddOnPlacementScoreStatus{
+				Conditions: []metav1.Condition{
+					{
+						Type:               "AddOnPlacementScoresUpdated",
+						Status:             "True",
+						Reason:             "AddOnPlacementScoresUpdated",
+						Message:            "AddOnPlacementScores updated successfully",
+						LastTransitionTime: metav1.NewTime(time.Now()),
+					},
 				},
-			},
-			ValidUntil: &metav1.Time{Time: time.Now().Add(time.Duration(interval) * time.Minute)},
+				Scores: []clusterapiv1alpha1.AddOnPlacementScoreItem{
+					{
+						Name:  "cpuratio",
+						Value: int32(rand.Intn(100)),
+					},
+					{
+						Name:  "memoryratio",
+						Value: int32(rand.Intn(100)),
+					},
+				},
+				ValidUntil: &metav1.Time{Time: time.Now().Add(time.Duration(interval) * time.Minute)},
+			}
 		}
 
 		if _, err := clusterClient.ClusterV1alpha1().AddOnPlacementScores(c).UpdateStatus(context.Background(), addOnPlacementScore, metav1.UpdateOptions{}); err != nil {
