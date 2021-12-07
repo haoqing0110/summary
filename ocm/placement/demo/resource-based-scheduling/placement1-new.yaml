@@ -1,0 +1,17 @@
+apiVersion: cluster.open-cluster-management.io/v1alpha1
+kind: Placement
+metadata:
+  name: placement1
+  namespace: demo-hq
+spec:
+  numberOfClusters: 1
+  prioritizerPolicy:
+    configurations:
+      - name: ResourceRatioCPU
+        scoreCoordinate:
+          buildIn: ResourceRatioCPU
+  predicates:
+    - requiredClusterSelector:
+        labelSelector:
+          matchLabels:
+            cluster.open-cluster-management.io/clusterset: demo-hq
