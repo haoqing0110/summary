@@ -1,7 +1,7 @@
 apiVersion: cluster.open-cluster-management.io/v1alpha1
 kind: Placement
 metadata:
-  name: placement1
+  name: demo1-1
 spec:
   numberOfClusters: 2
   prioritizerPolicy:
@@ -10,6 +10,6 @@ spec:
       - scoreCoordinate:
           type: AddOn
           addOn:
-            resourceName: demo
+            resourceName: demo1
             scoreName: cpuratio
         weight: 1

@@ -24,20 +24,19 @@ var restConfig *rest.Config
 var kubeClient kubernetes.Interface
 var clusterClient clusterv1client.Interface
 
-var update, clean bool
-var interval int
-var clusters string
-var scores string
+var clean bool
 var resourceName string
+var clusterNameStr string
+var scoreStr string
+var interval int
 
 func init() {
 	flag.BoolVar(&clean, "clean", false, "cluster name")
 
-	flag.StringVar(&resourceName, "crname", "demo", "resource name")
-	flag.IntVar(&interval, "interval", 1, "update interval minutes")
-
-	flag.StringVar(&clusters, "clusters", "", "cluster names")
-	flag.StringVar(&scores, "scores", "", "cluster scores")
+	flag.StringVar(&resourceName, "resource-name", "demo", "resource name")
+	flag.StringVar(&clusterNameStr, "cluster-name", "", "cluster names")
+	flag.StringVar(&scoreStr, "score", "", "cluster scores")
+	flag.IntVar(&interval, "interval", 60, "update interval minutes")
 }
 
 func main() {
@@ -47,19 +46,28 @@ func main() {
 		fmt.Printf("Failed: %s \n", err)
 	}
 
+	// get cluster names
+	clusterNames := getManagedClusterNames(clusterNameStr)
+
 	// clean
 	if clean {
-		CleanClusterScores(clusters, resourceName)
+		CleanClusterScores(clusterNames, resourceName)
 		return
 	}
 
 	// create
-	CreateClusterScores(clusters, resourceName)
+	CreateClusterScores(clusterNames, resourceName)
+	UpdateClusterScores(clusterNames, scoreStr, resourceName, interval)
 
-	// update
-	ticker := time.NewTicker(time.Duration(interval) * time.Minute)
+	// update each interval
+	ticker := time.NewTicker(time.Duration(interval) * time.Second)
 	defer ticker.Stop()
-	go UpdateClusterScores(clusters, scores, resourceName, interval)
+	go func(t *time.Ticker) {
+		for {
+			<-t.C
+			UpdateClusterScores(clusterNames, scoreStr, resourceName, interval)
+		}
+	}(ticker)
 
 	time.Sleep(time.Duration(30) * time.Minute)
 }
@@ -82,12 +90,8 @@ func initKubeRealEnv() error {
 }
 
 // create AddOnPlacementScores
-func CreateClusterScores(clusters, resourceName string) {
-	// get cluster names
-	clusternames := getManagedClusterNames(clusters)
-
-	// create addonplacementscores
-	for _, c := range clusternames {
+func CreateClusterScores(clusterNames []string, resourceName string) {
+	for _, c := range clusterNames {
 		score := &clusterapiv1alpha1.AddOnPlacementScore{
 			ObjectMeta: metav1.ObjectMeta{
 				Namespace: c,
@@ -104,31 +108,19 @@ func CreateClusterScores(clusters, resourceName string) {
 	}
 }
 
-func CleanClusterScores(clusters, resourceName string) {
+// clean AddOnPlacementScores
+func UpdateClusterScores(clusterNames []string, scoreStr, resourceName string, interval int) {
 	// get cluster names
-	clusternames := getManagedClusterNames(clusters)
-
-	// clean AddOnPlacementScores of all clusters
-	for _, c := range clusternames {
-		if err := clusterClient.ClusterV1alpha1().AddOnPlacementScores(c).Delete(context.Background(), resourceName, metav1.DeleteOptions{}); err != nil {
-			klog.Errorf("err: %s", err)
-		}
-	}
-}
-
-func UpdateClusterScores(clusters, scores, resourceName string, interval int) {
-	// get cluster names
-	clusternames := getManagedClusterNames(clusters)
-	scoreStrs := strings.Split(scores, ",")
+	scoreStrs := strings.Split(scoreStr, ",")
 
 	// update scores periodically
-	for i, c := range clusternames {
+	for i, c := range clusterNames {
 		addOnPlacementScore, err := clusterClient.ClusterV1alpha1().AddOnPlacementScores(c).Get(context.Background(), resourceName, metav1.GetOptions{})
 		if err != nil {
 			klog.Errorf("err: %s", err)
 		}
 
-		if len(clusternames) == len(scoreStrs) {
+		if len(clusterNames) == len(scoreStrs) {
 			intVar, _ := strconv.Atoi(scoreStrs[i])
 
 			addOnPlacementScore.Status = clusterapiv1alpha1.AddOnPlacementScoreStatus{
@@ -183,11 +175,20 @@ func UpdateClusterScores(clusters, scores, resourceName string, interval int) {
 	}
 }
 
-func getManagedClusterNames(clusters string) []string {
+// clean AddOnPlacementScores
+func CleanClusterScores(clusterNames []string, resourceName string) {
+	for _, c := range clusterNames {
+		if err := clusterClient.ClusterV1alpha1().AddOnPlacementScores(c).Delete(context.Background(), resourceName, metav1.DeleteOptions{}); err != nil {
+			klog.Errorf("err: %s", err)
+		}
+	}
+}
+
+func getManagedClusterNames(clustername string) []string {
 	names := []string{}
 
-	if len(clusters) > 0 {
-		for _, c := range strings.Split(clusters, ",") {
+	if len(clustername) > 0 {
+		for _, c := range strings.Split(clustername, ",") {
 			names = append(names, strings.Trim(c, " "))
 		}
 		return names
