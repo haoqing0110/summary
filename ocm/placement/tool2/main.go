@@ -170,7 +170,7 @@ func UpdateClusterScores(clusterNames []string, scoreStr, resourceName string, i
 		if _, err := clusterClient.ClusterV1alpha1().AddOnPlacementScores(c).UpdateStatus(context.Background(), addOnPlacementScore, metav1.UpdateOptions{}); err != nil {
 			klog.Errorf("err: %s", err)
 		} else {
-			klog.Infof("updated: %s in namespace %s", resourceName, c)
+			klog.Infof("updated: %s in namespace %s with score %s", resourceName, c, addOnPlacementScore.Status.Scores)
 		}
 	}
 }
