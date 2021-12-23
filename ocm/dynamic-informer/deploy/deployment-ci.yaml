@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myclient-ci
+  namespace: open-cluster-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myclient-ci
+  template:
+    metadata:
+      labels:
+        app: myclient-ci
+    spec:
+      containers:
+      - args:
+        - myclient
+        image: quay.io/haoqing/myclient:latest-ci
+        imagePullPolicy: Always
+        name: myclient-ci
+      serviceAccount: clusterlifecycle-state-metrics
+      serviceAccountName: clusterlifecycle-state-metrics

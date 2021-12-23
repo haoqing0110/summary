@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myclient-disstore
+  namespace: open-cluster-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myclient-disstore
+  template:
+    metadata:
+      labels:
+        app: myclient-disstore
+    spec:
+      containers:
+      - args:
+        - myclient
+        image: quay.io/haoqing/myclient:latest-disstore21
+        imagePullPolicy: Always
+        name: myclient-disstore
+      serviceAccount: clusterlifecycle-state-metrics
+      serviceAccountName: clusterlifecycle-state-metrics

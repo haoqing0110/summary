@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myclient-diusstore
+  namespace: open-cluster-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myclient-diusstore
+  template:
+    metadata:
+      labels:
+        app: myclient-diusstore
+    spec:
+      containers:
+      - args:
+        - myclient
+        image: quay.io/haoqing/myclient:latest-diusstore21
+        imagePullPolicy: Always
+        name: myclient-diusstore
+      serviceAccount: clusterlifecycle-state-metrics
+      serviceAccountName: clusterlifecycle-state-metrics
