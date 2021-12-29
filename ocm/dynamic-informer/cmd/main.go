@@ -1,8 +1,9 @@
 package main
 
 import (
-	"net/http"
 	_ "net/http/pprof"
+
+	"net/http"
 
 	"context"
 	"strconv"
@@ -53,20 +54,21 @@ var (
 
 func init() {
 	// local
-	kubeconfig := "/root/.kube/config"
-	restConfig, _ = clientcmd.BuildConfigFromFlags("", kubeconfig)
+	// kubeconfig := "/root/.kube/config"
+	// restConfig, _ = clientcmd.BuildConfigFromFlags("", kubeconfig)
 
 	// k8s
-	// restConfig, _ = clientcmd.BuildConfigFromFlags("", "")
+	restConfig, _ = clientcmd.BuildConfigFromFlags("", "")
 }
 
 func main() {
-	// CreateManagedClusterDynamicInformer()
+	CreateManagedClusterDynamicInformer()
 	// CreateManagedClusterDynamicInformerWithUstructedStore()
 	// CreateManagedClusterDynamicInformerWithStructedStore()
-	CreateManagedClusterClusterInformer()
+	// CreateManagedClusterClusterInformer()
 
 	http.ListenAndServe("0.0.0.0:6060", nil)
+	// time.Sleep(200 * time.Second)
 }
 
 func CreateManagedClusterDynamicInformer() {
@@ -149,6 +151,7 @@ func startWatchingManagedCluster(stopCh <-chan struct{}, s cache.SharedIndexInfo
 	handlers := cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			o, _ := meta.Accessor(obj)
+			klog.Warningf("Add %s", o.GetName())
 			/*clusterclient, err := clusterclient.NewForConfig(restConfig)
 			if err != nil {
 				klog.Warningf("Add cluster client err: %s", err)
@@ -162,9 +165,7 @@ func startWatchingManagedCluster(stopCh <-chan struct{}, s cache.SharedIndexInfo
 			clusterclient.ClusterV1().ManagedClusters().Update(context.Background(), mc, metav1.UpdateOptions{})
 			if err != nil {
 				klog.Warningf("Add Update err: %s", err)
-			} */
-
-			klog.Warningf("Add %s", o.GetName())
+			}*/
 		},
 		UpdateFunc: func(oldObj, obj interface{}) {
 			o, _ := meta.Accessor(obj)

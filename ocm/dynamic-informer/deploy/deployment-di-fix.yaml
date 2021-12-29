@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myclient-di-fix
+  namespace: open-cluster-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myclient-di-fix
+  template:
+    metadata:
+      labels:
+        app: myclient-di-fix
+    spec:
+      containers:
+      - args:
+        - myclient
+        image: quay.io/haoqing/myclient:latest-di21-fix
+        imagePullPolicy: Always
+        name: myclient-di-fix
+      serviceAccount: clusterlifecycle-state-metrics
+      serviceAccountName: clusterlifecycle-state-metrics
