@@ -166,7 +166,8 @@ func EachListItem(obj runtime.Object, fn func(runtime.Object) error) error {
 
 // ExtractList returns obj's Items element as an array of runtime.Objects.
 // Returns an error if obj is not a List type (does not have an Items member).
-func ExtractList(obj runtime.Object) ([]runtime.Object, error) {
+//func ExtractList(obj runtime.Object) ([]runtime.Object, error) {
+func ExtractList(obj runtime.Object) ([]interface{}, error) {
 	itemsPtr, err := GetItemsPtr(obj)
 	if err != nil {
 		return nil, err
@@ -175,7 +176,8 @@ func ExtractList(obj runtime.Object) ([]runtime.Object, error) {
 	if err != nil {
 		return nil, err
 	}
-	list := make([]runtime.Object, items.Len())
+	//list := make([]runtime.Object, items.Len())
+	list := make([]interface{}, items.Len())
 	for i := range list {
 		raw := items.Index(i)
 		switch item := raw.Interface().(type) {
