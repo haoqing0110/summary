@@ -166,8 +166,7 @@ func EachListItem(obj runtime.Object, fn func(runtime.Object) error) error {
 
 // ExtractList returns obj's Items element as an array of runtime.Objects.
 // Returns an error if obj is not a List type (does not have an Items member).
-//func ExtractList(obj runtime.Object) ([]runtime.Object, error) {
-func ExtractList(obj runtime.Object) ([]interface{}, error) {
+func ExtractList(obj runtime.Object) ([]runtime.Object, error) {
 	itemsPtr, err := GetItemsPtr(obj)
 	if err != nil {
 		return nil, err
@@ -176,8 +175,7 @@ func ExtractList(obj runtime.Object) ([]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	//list := make([]runtime.Object, items.Len())
-	list := make([]interface{}, items.Len())
+	list := make([]runtime.Object, items.Len())
 	for i := range list {
 		raw := items.Index(i)
 		switch item := raw.Interface().(type) {
@@ -194,9 +192,11 @@ func ExtractList(obj runtime.Object) ([]interface{}, error) {
 		case runtime.Object:
 			list[i] = item
 		default:
-			var found bool
-			if list[i], found = raw.Addr().Interface().(runtime.Object); !found {
+			if o, found := raw.Addr().Interface().(runtime.Object); !found {
 				return nil, fmt.Errorf("%v: item[%v]: Expected object, got %#v(%s)", obj, i, raw.Interface(), raw.Kind())
+			} else {
+				copyItem := o.DeepCopyObject()
+				list[i] = copyItem
 			}
 		}
 	}
