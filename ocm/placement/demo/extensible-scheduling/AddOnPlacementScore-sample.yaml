@@ -1,0 +1,22 @@
+apiVersion: cluster.open-cluster-management.io/v1alpha1
+kind: AddOnPlacementScore
+metadata:
+  creationTimestamp: "2022-02-21T03:24:54Z"
+  generation: 1
+  name: demo1
+  namespace: cluster1
+  resourceVersion: "5997137"
+  uid: a6825962-7c9d-46f1-8925-b5aea79d6943
+status:
+  conditions:
+  - lastTransitionTime: "2022-02-21T03:25:14Z"
+    message: AddOnPlacementScores updated successfully
+    reason: AddOnPlacementScoresUpdated
+    status: "True"
+    type: AddOnPlacementScoresUpdated
+  scores:
+  - name: cpuratio
+    value: 25
+  - name: memoryratio
+    value: 40
+  validUntil: "2022-02-21T03:45:14Z"
