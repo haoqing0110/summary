@@ -7,7 +7,9 @@ spec:
   prioritizerPolicy:
     mode: Exact
     configurations:
-      - name: Steady
+      - scoreCoordinate:
+          type: BuiltIn
+          builtIn: Steady
         weight: 3
       - scoreCoordinate:
           type: AddOn
