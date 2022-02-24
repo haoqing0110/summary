@@ -16,6 +16,24 @@ check cert
 ```
 openssl x509 -in /etc/cfc/conf/ca.crt  -text -noout
 ```
+check all the cert under dir
+```
+#!/bin/bash
+function read_dir(){
+for file in `ls $1`
+do
+if [ -d $1"/"$file ]
+then
+read_dir $1"/"$file
+else
+#cat $1"/"$file | openssl x509 -text
+openssl crl2pkcs7 -nocrl -certfile  $1"/"$file | openssl pkcs7 -print_certs -text
+fi
+done
+}
+
+read_dir ./
+```
 check key
 ```
 openssl rsa -in mykey.key -text -noout
