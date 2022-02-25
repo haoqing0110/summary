@@ -1,0 +1,9 @@
+apiVersion: cluster.open-cluster-management.io/v1
+kind: ManagedCluster
+metadata:
+  labels:
+    cluster.open-cluster-management.io/clusterset: demo1
+  name: cluster1
+spec:
+  hubAcceptsClient: false
+  leaseDurationSeconds: 60
