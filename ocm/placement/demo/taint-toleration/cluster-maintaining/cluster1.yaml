@@ -8,7 +8,7 @@ spec:
   hubAcceptsClient: false
   leaseDurationSeconds: 60
   taints:
-    - key: maintaining
+    - key: gpu
       value: "true"
       effect: "NoSelect"
       timeAdded: 2021-07-06T15:00:00+08:00

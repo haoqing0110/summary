@@ -39,10 +39,8 @@ kubectl create ns cluster2
 kubectl create ns cluster3
 
 kubectl apply -f cluster-maintaining/cluster1.yaml
-kubectl apply -f cluster-maintaining/cluster2.yaml
 clear 
-p "Case 1: Cluster Maintaining."
-p "User can set a cluster to maintaining status, no workloads will be scheduled to the cluster."
+p "Case 1: DO NOT schedule workload to clusters with taint."
 pe "kubectl get managedclusters"
 pe "kubectl get managedclusters -A -o=jsonpath='{range .items[*]}{.metadata.name}{\"\\t\"}{.spec}{\"\\n\"}{end}'"
 pe "cat cluster-maintaining/placement1.yaml"
@@ -51,16 +49,7 @@ pe "kubectl get placement -n demo1"
 pe "kubectl get placementdecision -n demo1"
 p ""
 
-kubectl apply -f schedule-on-certain/cluster1.yaml
-kubectl apply -f schedule-on-certain/cluster2.yaml
-kubectl apply -f schedule-on-certain/cluster3.yaml
-clear
-p "Case 2: Schedule on Certain Clusters."
-p "Users schedule some workloads to certain managed clusters."
-pe "kubectl get managedclusters"
-pe "kubectl get managedclusters -A -o=jsonpath='{range .items[*]}{.metadata.name}{\"\\t\"}{.spec}{\"\\n\"}{end}'"
-pe "kubectl get placement -n demo1"
-pe "kubectl get placementdecision -n demo1"
+p "Case 2: Uer could use toleration to schedule workload to clusters with taint."
 p "Adding tolerations to placement"
 pe "cat schedule-on-certain/placement1-new.yaml"
 pe "kubectl apply -f schedule-on-certain/placement1-new.yaml -n ${NS}"
@@ -69,27 +58,27 @@ pe "kubectl get placementdecision -n demo1"
 pe "kubectl describe placementdecision demo1-decision-1 -n ${NS} | grep Status -A 10"
 p ""
 
-kubectl delete -f schedule-on-certain/placement1-new.yaml
-kubectl apply -f eviction/cluster1.yaml
-kubectl apply -f eviction/cluster2.yaml
-kubectl apply -f eviction/cluster3.yaml
-clear
-p "Case 3: Immediate Eviction."
-p "When a managed cluster gets offline, the system can make applications deployed on this cluster to be transferred to another available managed cluster immediately."
-pe "kubectl get managedclusters"
-pe "kubectl get managedclusters -A -o=jsonpath='{range .items[*]}{.metadata.name}{\"\\t\"}{.spec}{\"\\n\"}{end}'"
-pe "cat eviction/placement3.yaml"
-pe "kubectl apply -f eviction/placement3.yaml -n ${NS}"
-pe "kubectl get placement -n demo1"
-pe "kubectl get placementdecision -n demo1"
-pe "kubectl describe placementdecision demo3-decision-1 -n ${NS} | grep Status -A 10"
-selected=$(kubectl get placementdecision demo3-decision-1 -n demo1  -o=jsonpath='{.status.decisions[0].clusterName}')
-git checkout eviction/cluster.yaml
-sed -i "s/PLACEHOLDER/${selected}/g" eviction/cluster.yaml
-p "Adding taints to ${selected}"
-pe "cat eviction/cluster.yaml"
-pe "kubectl apply -f eviction/cluster.yaml -n ${NS}"
-pe "kubectl get managedclusters -A -o=jsonpath='{range .items[*]}{.metadata.name}{\"\\t\"}{.spec}{\"\\n\"}{end}'"
-pe "kubectl describe placementdecision demo3-decision-1 -n ${NS} | grep Status -A 10"
-p ""
-clear
+#kubectl delete -f schedule-on-certain/placement1-new.yaml
+#kubectl apply -f eviction/cluster1.yaml
+#kubectl apply -f eviction/cluster2.yaml
+#kubectl apply -f eviction/cluster3.yaml
+#clear
+#p "Case 3: Immediate Eviction."
+#p "When a managed cluster gets offline, the system can make applications deployed on this cluster to be transferred to another available managed cluster immediately."
+#pe "kubectl get managedclusters"
+#pe "kubectl get managedclusters -A -o=jsonpath='{range .items[*]}{.metadata.name}{\"\\t\"}{.spec}{\"\\n\"}{end}'"
+#pe "cat eviction/placement3.yaml"
+#pe "kubectl apply -f eviction/placement3.yaml -n ${NS}"
+#pe "kubectl get placement -n demo1"
+#pe "kubectl get placementdecision -n demo1"
+#pe "kubectl describe placementdecision demo3-decision-1 -n ${NS} | grep Status -A 10"
+#selected=$(kubectl get placementdecision demo3-decision-1 -n demo1  -o=jsonpath='{.status.decisions[0].clusterName}')
+#git checkout eviction/cluster.yaml
+#sed -i "s/PLACEHOLDER/${selected}/g" eviction/cluster.yaml
+#p "Adding taints to ${selected}"
+#pe "cat eviction/cluster.yaml"
+#pe "kubectl apply -f eviction/cluster.yaml -n ${NS}"
+#pe "kubectl get managedclusters -A -o=jsonpath='{range .items[*]}{.metadata.name}{\"\\t\"}{.spec}{\"\\n\"}{end}'"
+#pe "kubectl describe placementdecision demo3-decision-1 -n ${NS} | grep Status -A 10"
+#p ""
+#clear
