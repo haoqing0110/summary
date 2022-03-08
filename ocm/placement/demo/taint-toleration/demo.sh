@@ -49,7 +49,7 @@ pe "kubectl get placement -n demo1"
 pe "kubectl get placementdecision -n demo1"
 p ""
 
-p "Case 2: Uer could use toleration to schedule workload to clusters with taint."
+p "Case 2: User could use toleration to schedule workload to clusters with taint."
 p "Adding tolerations to placement"
 pe "cat schedule-on-certain/placement1-new.yaml"
 pe "kubectl apply -f schedule-on-certain/placement1-new.yaml -n ${NS}"
