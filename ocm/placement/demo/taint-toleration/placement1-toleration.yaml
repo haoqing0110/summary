@@ -5,6 +5,6 @@ metadata:
   namespace: demo1
 spec:
   tolerations:
-    - key: gpu
+    - key: "gpu"
       value: "true"
       operator: Equal
