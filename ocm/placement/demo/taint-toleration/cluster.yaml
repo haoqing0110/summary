@@ -1,11 +1,15 @@
 apiVersion: cluster.open-cluster-management.io/v1
 kind: ManagedCluster
 metadata:
-  name: clustern
+  name: cluster1
 spec:
   hubAcceptsClient: false
   leaseDurationSeconds: 60
-  taints:
-    - key: gpu
-      value: "true"
-      effect: "NoSelect"
+---
+apiVersion: cluster.open-cluster-management.io/v1
+kind: ManagedCluster
+metadata:
+  name: cluster2
+spec:
+  hubAcceptsClient: false
+  leaseDurationSeconds: 60

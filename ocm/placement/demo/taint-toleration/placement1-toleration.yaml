@@ -5,6 +5,5 @@ metadata:
   namespace: demo1
 spec:
   tolerations:
-    - key: "gpu"
-      value: "true"
-      operator: Equal
+    - key: "cluster.open-cluster-management.io/unreachable"
+      operator: Exists

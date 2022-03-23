@@ -1,10 +1,10 @@
 apiVersion: hive.openshift.io/v1
 kind: ClusterClaim
 metadata:
- name: qhao
+ name: haoqing2
  namespace: server-foundation
 spec:
- clusterPoolName: server-foundation-aws
+ clusterPoolName: server-foundation-aws-47
  subjects:
  - apiGroup: rbac.authorization.k8s.io
    kind: Group
