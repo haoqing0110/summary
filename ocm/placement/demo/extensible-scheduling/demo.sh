@@ -26,7 +26,10 @@ DEMO_PROMPT="${GREEN}➜ ${CYAN}\W "
 # DEMO_CMD_COLOR=$BLACK
 
 # clean env
-NS="demo1"
+NS="demohq"
+c1=cluster1
+c2=cluster2
+c3=cluster3
 #kubectl delete ns $(oc get managedcluster | awk '{print $1}')
 KUBECONFIG="/root/.kube/config"
 scoretool --clean --resource-name demo1
@@ -37,12 +40,12 @@ kubectl delete -f  ./ -n demo2
 
 # hide the evidence
 kubectl create ns ${NS}
-kubectl create ns cluster1
-kubectl create ns cluster2
-kubectl create ns cluster3
-clustertool --create -c cluster1 -n ${NS}
-clustertool --create -c cluster2 -n ${NS}
-clustertool --create -c cluster3 -n ${NS}
+kubectl create ns ${c1}
+kubectl create ns ${c2}
+kubectl create ns ${c3}
+clustertool --create -c ${c1} -n ${NS}
+clustertool --create -c ${c2} -n ${NS}
+clustertool --create -c ${c3} -n ${NS}
 
 clear
 p "Placment extensible scheduling demo. Users could use scores in AddOnPlacementScore to select clusters."
@@ -97,36 +100,3 @@ pe "kubectl describe placementdecision demo1-3-decision-1 -n ${NS} | grep Status
 pe "- end -"
 
 clear
-#kubectl delete managedcluster $(oc get managedcluster | awk '{print $1}')
-#kubectl delete -f  ./ -n ${NS}
-#NS="demo2"
-#kubectl delete -f  ./ -n ${NS}
-#kubectl create ns ${NS}
-#kubectl create ns primary
-#kubectl create ns backup
-#clustertool --create -c primary -n ${NS}
-#clustertool --create -c backup -n ${NS}
-#
-#clear
-#p "Case 2: Disaster recovery workload could be automatically switched to an avaliable cluster."
-#p "The environment has 2 managed clusters, one is primary and one is backup."
-#pe "kubectl get managedclusters"
-#
-#p "A controller is maintaining the AddOnPlacementScore CRs for the 2 clusters."
-#p "scoretool --resource-name demo2 --clusters primary,backup --scores 100,1 --interval 30"
-#
-#pe "kubectl get AddOnPlacementScore -A"
-#pe "kubectl get AddOnPlacementScore -A -oyaml"
-#
-#p "I want my workload running one the primary cluster."
-#pe "cat demo2.yaml"
-#pe "kubectl create -f demo2.yaml -n ${NS}"
-#pe "kubectl describe -f demo2.yaml -n ${NS}"
-#pe "kubectl describe placementdecision demo2 -n ${NS}"
-#
-#p "Primary cluster is down."
-#pe "kubectl label clusters"
-#
-#p "My workload switched to backup automatically."
-#pe "kubectl describe placementdecision demo2 -n ${NS}"
-#
