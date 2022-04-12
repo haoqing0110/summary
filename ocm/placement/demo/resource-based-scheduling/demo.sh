@@ -28,7 +28,7 @@ c1=cluster1
 c2=cluster2
 c3=cluster3
 
-kubectl delete managedcluster ${c1} ${c2} ${c3}
+kubectl delete managedcluster $(oc get managedcluster | awk '{print $1}')
 clustertool --create -n demo-hq -c ${c1}
 clustertool --create -n demo-hq -c ${c2}
 clustertool --update -n demo-hq -c ${c1} -r "4,4,100Mi,100Mi"
