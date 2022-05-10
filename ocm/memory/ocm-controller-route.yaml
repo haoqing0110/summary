@@ -1,0 +1,14 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ocm-controller
+  namespace: multicluster-engine
+spec:
+  host: pprof.apps.server-foundation-410-rbt5h.dev04.red-chesterfield.com
+  port:
+    targetPort: 6060
+  to:
+    kind: Service
+    name: ocm-controller
+    weight: 100
+  wildcardPolicy: None
