@@ -1,10 +1,12 @@
 apiVersion: hive.openshift.io/v1
 kind: ClusterClaim
 metadata:
- name: haoqing2
+ name: haoqing-hub
  namespace: server-foundation
+ annotations:
+   cluster.open-cluster-management.io/createmanagedcluster: "false"
 spec:
- clusterPoolName: server-foundation-aws-47
+ clusterPoolName: server-foundation-ocp-10-20
  subjects:
  - apiGroup: rbac.authorization.k8s.io
    kind: Group

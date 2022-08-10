@@ -42,7 +42,7 @@ openssl rsa -in mykey.key -text -noout
 ```
 docker run --network=host --rm -it nablac0d3/sslyze --regular 127.0.0.1:4001
 docker run --network=host --rm -it quay.io/haoqing/ssl:latest --regular 127.0.0.1:4001
-rpm -vhU https://nmap.org/dist/nmap-7.70-1.x86_64.rpm
+rpm -vhU https://nmap.org/dist/nmap-7.92-1.x86_64.rpm
 nmap --script ssl-enum-ciphers -p 4001 127.0.0.1
 nmap -Pn -sS -p4001 --script ssl-enum-ciphers 172.16.191.235
 ```
