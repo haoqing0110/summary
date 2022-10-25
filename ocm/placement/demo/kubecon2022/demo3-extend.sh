@@ -34,30 +34,41 @@ kubectl delete placement -n ${NS} $(kubectl get placement -n ${NS} | awk '{print
 kubectl patch managedcluster ${c1} -p '{"spec":{"taints":[]}}' --type=merge
 kubectl patch managedcluster ${c2} -p '{"spec":{"taints":[]}}' --type=merge
 clusteradm clusterset bind default --namespace default
+kubectl delete addonplacementscore -n ${c1} resource-usage-score
+kubectl delete addonplacementscore -n ${c2} resource-usage-score
 clear
 
 p "Extend the multicluster scheduling capabilities with placement"
 
-pe "clusteradm get clusters"
-pe "clusteradm get clustersets"
+pe "clusteradm get clusters -otable"
+pe "clusteradm get clustersets -otable"
 
+p "Select 1 clusters with highest allocatable cpu"
+pe "cat placement3.yaml"
+pe "kubectl apply -f placement3.yaml -n ${NS}"
+pe "clusteradm get placements -otable"
+pe "kubectl describe -f placement3.yaml -n ${NS} | grep Events -A 10"
+
+p "Select 1 clusters with highest customized score cpuAvailable."
 p "Deploy customized score addon resource-usage-collect"
 pe "git clone git@github.com:JiahaoWei-RH/resource-usage-collect.git"
 pe "cd resource-usage-collect"
 pe "make deploy"
+pe "cd -"
 pe "kubectl get pods -n open-cluster-management | grep resource-usage-collect-controller"
-pe "kubectl get pods -n default | grep resource-usage-collect-agent"
+pe "kubectl --context kind-cluster1 get pods -n default | grep resource-usage-collect-agent"
+pe "kubectl --context kind-cluster2 get pods -n default | grep resource-usage-collect-agent"
 pe "kubectl get addonplacementscore -A"
-#pe "kubectl get addonplacementscore -n cluster1 resource-usage-score -oyaml"
+pe "kubectl get addonplacementscore -n cluster1 resource-usage-score -oyaml"
 pe "kubectl get addonplacementscore -A -o=jsonpath='{range .items[*]}{.metadata.namespace}{\"\t\"}{.status.scores}{\"\n\"}{end}'"
+pe "kubectl --context kind-cluster1 get pods -A"
+pe "kubectl --context kind-cluster2 get pods -A"
 
+pe "cat placement4.yaml"
+pe "kubectl apply -f placement4.yaml -n ${NS}"
+pe "clusteradm get placements -otable"
+pe "kubectl describe -f placement4.yaml -n ${NS} | grep Events -A 10"
+pe ""
 
-p "Select 1 clusters with highest customized score cpuratio."
-pe "cat placement3.yaml"
-pe "kubectl create -f placement3.yaml -n ${NS}"
-pe "kubectl get placement -n ${NS}"
-pe "kubectl describe -f placement3.yaml -n ${NS} | grep Events -A 10"
-pe "kubectl get placementdecision -n ${NS}"
-pe "kubectl describe placementdecision placement3-decision-1 -n ${NS} | grep Status -A 10"
-
+kubectl delete placement -n ${NS} $(kubectl get placement -n ${NS} | awk '{print $1}')
 clear

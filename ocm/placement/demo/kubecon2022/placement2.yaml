@@ -5,6 +5,6 @@ metadata:
 spec:
   numberOfClusters: 1
   tolerations:
-    - key: "cluster.open-cluster-management.io/unreachable"
+    - key: "unavailable"
       operator: Exists
       tolerationSeconds: 30

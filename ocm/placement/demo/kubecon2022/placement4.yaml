@@ -1,7 +1,7 @@
 apiVersion: cluster.open-cluster-management.io/v1beta1
 kind: Placement
 metadata:
-  name: placement3
+  name: placement4
 spec:
   numberOfClusters: 1
   clusterSets:
@@ -9,6 +9,9 @@ spec:
   prioritizerPolicy:
     mode: Exact
     configurations:
-    - scoreCoordinate:
-        type: BuiltIn
-        builtIn: ResourceAllocatableCPU
+      - scoreCoordinate:
+          type: AddOn
+          addOn:
+            resourceName: resource-usage-score
+            scoreName: cpuAvailable
+        weight: 1
