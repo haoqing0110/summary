@@ -1,7 +1,8 @@
 #!/bin/bash
-#kubectl get manifestwork -n local-cluster addon-application-manager-deploy -o=jsonpath='{.metadata.generation}'
-#kubectl get manifestwork -n local-cluster -o=jsonpath='{range .items[*]}{.metadata.namespace}{"\t"}{.metadata.name}{"\t"}{.metadata.generation}{"\t"}{.status.conditions[*].observedGeneration}{"\n"}{end}'
-#watch "kubectl get manifestwork -n local-cluster -o=jsonpath='{range .items[*]}{.metadata.namespace}{\"\t\"}{.metadata.name}{\"\t\"}{.metadata.generation}{\"\t\"}{.status.conditions[*].observedGeneration}{\"\n\"}{end}'"
+# This script is to monitor a single cluster's upgrade time.
+# Monitor the addon manifestwork’s generation change time and  “Applied” condition observedGeneration change time:
+# For each addon, the upgrade starts when generation changes, for example from 2 to 3, and upgrade ends when observedGeneration update from 2 to 3.
+# For each managed clusters, the process is the whole upgrade duration of all the addons and klusterlet. (klusterlet also has a manifestwork).
 
 NAMESPACES=(
 "cluster1"
