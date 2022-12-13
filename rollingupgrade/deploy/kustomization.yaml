@@ -1,0 +1,12 @@
+namespace: default
+
+resources:
+- resources/clusterrole.yaml
+- resources/controller.yaml
+
+images:
+- name: example-image
+  newName: quay.io/haoqing/rollingupgrade
+  newTag: latest
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization

@@ -1,0 +1,29 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: work-update-controller
+  labels:
+    app: work-update-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: work-update-controller
+  template:
+    metadata:
+      labels:
+        app: work-update-controller
+    spec:
+      serviceAccountName: work-update-controller-sa
+      containers:
+      - name: work-update-controller
+        image: example-image
+        imagePullPolicy: Always
+        env:
+        - name: IMAGE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: image-config
+              key: IMAGE_NAME
+        args:
+          - "/work-update-controller"
