@@ -205,12 +205,23 @@ func main() {
 	}
 	workGenMap := map[string]*workGenRecorder{}
 	for _, c := range clusters.Items {
+		available := false
+		for _, cond := range c.Status.Conditions {
+			if cond.Type == "ManagedClusterConditionAvailable" && cond.Status == "True" {
+				available = true
+			}
+		}
+		if !available {
+			klog.Infof("Ignore cluster as it's not ready: %v", c.Name)
+			continue
+		}
 		workGenMap[c.Name+"/"+c.Name+klusterletwork] = &workGenRecorder{}
 		for _, addon := range addonworks {
 			workGenMap[c.Name+"/"+addon] = &workGenRecorder{}
 		}
 	}
 	klog.Infof("Init workGenMap: %v", workGenMap)
+	klog.Infof("Init workGenMap len: %v", len(workGenMap))
 
 	//start watch
 	factory := workinformers.NewSharedInformerFactory(workclient, 5*time.Minute)
