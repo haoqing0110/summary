@@ -42,11 +42,14 @@ clustertool --create -c ${c2} -n ${NS}
 #kubectl patch managedcluster ${c2} -p '{"spec":{"taints":[{"effect":"NoSelect","key":"cluster.open-cluster-management.io/unreachable"}]}}' --type=merge
 kubectl label managedclusters ${c1} purpose=test
 kubectl label managedclusters ${c2} purpose=dev
+clusteradm create clusterset ${NS}
+clusteradm clusterset bind ${NS} --namespace ${NS}
+clusteradm clusterset set ${NS} --clusters ${c1},${c2}
 
 clear 
 p "The environment has 2 managed clusters bound to namespace ${NS}."
-pe "clusteradm get clusters"
-pe "clusteradm get clustersets"
+pe "clusteradm get clusters -otable"
+pe "clusteradm get clustersets -otable"
 pe "kubectl get managedclusters --show-labels"
 p ""
 
