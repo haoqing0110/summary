@@ -111,7 +111,6 @@ func (c *WorkController) workUpdate(old, new interface{}) {
 	if i, ok := c.workGenMap[namespace+"/"+name]; ok {
 		newgen := newWork.GetGeneration()
 		newobsgen := newWork.Status.Conditions[appliedIdx].ObservedGeneration
-		klog.Infof("WORK UPDATED: %s/%s gen=%s, obsgen=%s", namespace, name, newgen, newobsgen)
 
 		if newgen != i.initGen && newgen != i.updateGen.gen {
 			t := time.Now()
@@ -124,6 +123,8 @@ func (c *WorkController) workUpdate(old, new interface{}) {
 			i.updateObsGen.updateTime = &t
 			c.updatedCount += 1
 		}
+
+		klog.Infof("WORK UPDATED: %s/%s gen=%s, obsgen=%s, updated=%d", namespace, name, newgen, newobsgen, c.updatedCount)
 	}
 
 	if c.updatedCount == len(c.workGenMap) {
