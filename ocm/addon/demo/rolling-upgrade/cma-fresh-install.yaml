@@ -1,0 +1,24 @@
+apiVersion: addon.open-cluster-management.io/v1alpha1
+kind: ClusterManagementAddOn
+metadata:
+  name: helloworld
+  annotations:
+    addon.open-cluster-management.io/lifecycle: "addon-manager"
+spec:
+  addOnMeta:
+    description: helloworld is an example addon created by go template
+    displayName: helloworld
+  installStrategy:
+#    type: Manual
+    type: Placements
+    placements:
+    - name: placement-all
+      namespace: default
+      configs:
+      - group: addon.open-cluster-management.io
+        resource: addondeploymentconfigs
+        name: config-v1
+        namespace: open-cluster-management
+  supportedConfigs:
+  - group: addon.open-cluster-management.io
+    resource: addondeploymentconfigs
