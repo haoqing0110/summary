@@ -22,17 +22,17 @@ spec:
         type: RollingUpdate
         rollingUpdate:
           maxConcurrency: "25%"
-    - name: placement-canary
-      namespace: default
-      configs:
-      - group: addon.open-cluster-management.io
-        resource: addondeploymentconfigs
-        name: config-v4
-        namespace: open-cluster-management
-      rolloutStrategy:
-        type: RollingUpdate
-        rollingUpdate:
-          maxConcurrency: "25%"
+#    - name: placement-canary
+#      namespace: default
+#      configs:
+#      - group: addon.open-cluster-management.io
+#        resource: addondeploymentconfigs
+#        name: config-v4
+#        namespace: open-cluster-management
+#      rolloutStrategy:
+#        type: RollingUpdate
+#        rollingUpdate:
+#          maxConcurrency: "25%"
   supportedConfigs:
   - group: addon.open-cluster-management.io
     resource: addondeploymentconfigs
