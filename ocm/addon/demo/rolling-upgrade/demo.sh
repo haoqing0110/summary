@@ -38,8 +38,9 @@ kubectl apply -f addonhubconfigs.crd.yaml
 clusteradm clusterset bind global --namespace default
 kubectl apply -f placement-all.yaml
 kubectl apply -f placement-canary.yaml
-#pe "git clone git@github.com:open-cluster-management-io/addon-framework.git"
+pe "git clone git@github.com:haoqing0110/addon-framework.git"
 pe "cd addon-framework"
+pe "git checkout br_rollout-demo"
 pe "make undeploy-helloworld"
 pe "make deploy-helloworld"
 pe "cd .."

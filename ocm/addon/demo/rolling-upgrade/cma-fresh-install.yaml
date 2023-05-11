@@ -9,16 +9,11 @@ spec:
     description: helloworld is an example addon created by go template
     displayName: helloworld
   installStrategy:
-#    type: Manual
     type: Placements
     placements:
     - name: placement-all
       namespace: default
       configs:
       - group: addon.open-cluster-management.io
-        resource: addondeploymentconfigs
+        resource: addonhubconfigs
         name: config-v1
-        namespace: open-cluster-management
-  supportedConfigs:
-  - group: addon.open-cluster-management.io
-    resource: addondeploymentconfigs

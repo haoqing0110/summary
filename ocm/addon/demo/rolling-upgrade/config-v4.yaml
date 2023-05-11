@@ -1,9 +1,6 @@
 apiVersion: addon.open-cluster-management.io/v1alpha1
-kind: AddOnDeploymentConfig
+kind: AddOnHubConfig
 metadata:
   name: config-v4
-  namespace: open-cluster-management
 spec:
-  customizedVariables:
-    - name: k4
-      value: v4
+  desiredVersion: v4

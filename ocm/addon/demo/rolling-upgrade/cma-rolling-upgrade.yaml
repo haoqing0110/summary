@@ -15,13 +15,9 @@ spec:
       namespace: default
       configs:
       - group: addon.open-cluster-management.io
-        resource: addondeploymentconfigs
+        resource: addonhubconfigs
         name: config-v3
-        namespace: open-cluster-management
       rolloutStrategy:
         type: RollingUpdate
         rollingUpdate:
           maxConcurrency: "25%"
-  supportedConfigs:
-  - group: addon.open-cluster-management.io
-    resource: addondeploymentconfigs
