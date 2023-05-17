@@ -38,12 +38,12 @@ kubectl apply -f addonhubconfigs.crd.yaml
 clusteradm clusterset bind global --namespace default
 kubectl apply -f placement-all.yaml
 kubectl apply -f placement-canary.yaml
-pe "git clone git@github.com:haoqing0110/addon-framework.git"
-pe "cd addon-framework"
-pe "git checkout br_rollout-demo"
-pe "make undeploy-helloworld"
-pe "make deploy-helloworld"
-pe "cd .."
+git clone git@github.com:haoqing0110/addon-framework.git
+cd addon-framework
+git checkout br_rollout-demo
+make undeploy-helloworld
+make deploy-helloworld
+cd ..
 clear
 
 p "add-on rolling upgrade demo."
@@ -57,7 +57,7 @@ pe "kubectl get managedclusteraddon -A"
 pe ""
 clear
 
-p "Case 1: fresh install add-on agents with install strategy"
+p "Case 1: enable addon-manager-controller, fresh install add-on agents with install strategy"
 p "Enable addon-manager-controller."
 pe "cat cluster-manager.yaml"
 pe "kubectl apply -f cluster-manager.yaml"
@@ -70,7 +70,7 @@ pe "kubectl apply -f cma-fresh-install.yaml"
 pe "kubectl apply -f config-v1.yaml"
 pe "kubectl get managedclusteraddon -A"
 pe "kubectl get clustermanagementaddon helloworld -oyaml"
-pe "kubectl get managedclusteraddon -A -o=jsonpath='{range .items[*]}{.metadata.namespace}{\"\\t\"}{.status.configReferences}{\"\\n\"}{end}'"
+pe "kubectl get managedclusteraddon -A -ojson | jq '.items[] | .metadata.namespace, .status.configReferences[]'"
 pe ""
 
 clear
@@ -82,7 +82,7 @@ pe "kubectl get clustermanagementaddon helloworld -oyaml"
 pe "cat config-v2.yaml"
 pe "kubectl apply -f config-v2.yaml"
 pe "kubectl get clustermanagementaddon helloworld -oyaml"
-pe "kubectl get managedclusteraddon -A -o=jsonpath='{range .items[*]}{.metadata.namespace}{\"\\t\"}{.status.configReferences}{\"\\n\"}{end}'"
+pe "kubectl get managedclusteraddon -A -ojson | jq '.items[] | .metadata.namespace, .status.configReferences[]'"
 pe ""
 
 clear
@@ -90,12 +90,12 @@ p "Case 3: rolling upgrade the add-on agents when config changes"
 pe "cat cma-rolling-upgrade.yaml"
 pe "kubectl apply -f cma-rolling-upgrade.yaml"
 pe "kubectl get clustermanagementaddon helloworld -oyaml"
-pe "kubectl get managedclusteraddon -A -o=jsonpath='{range .items[*]}{.metadata.namespace}{\"\\t\"}{.status.configReferences}{\"\\n\"}{end}'"
+pe "kubectl get managedclusteraddon -A -ojson | jq '.items[] | .metadata.namespace, .status.configReferences[]'"
 
 pe "cat config-v3.yaml"
 pe "kubectl apply -f config-v3.yaml"
 pe "kubectl get clustermanagementaddon helloworld -oyaml"
-pe "kubectl get managedclusteraddon -A -o=jsonpath='{range .items[*]}{.metadata.namespace}{\"\\t\"}{.status.configReferences}{\"\\n\"}{end}'"
+pe "kubectl get managedclusteraddon -A -ojson | jq '.items[] | .metadata.namespace, .status.configReferences[]'"
 pe ""
 
 clear
@@ -106,14 +106,14 @@ pe "clusteradm get placements -otable"
 pe "kubectl apply -f cma-rolling-upgrade-with-test-step1.yaml"
 pe "kubectl apply -f config-v4.yaml"
 pe "kubectl get clustermanagementaddon helloworld -oyaml"
-pe "kubectl get managedclusteraddon -A -o=jsonpath='{range .items[*]}{.metadata.namespace}{\"\\t\"}{.status.configReferences}{\"\\n\"}{end}'"
+pe "kubectl get managedclusteraddon -A -ojson | jq '.items[] | .metadata.namespace, .status.configReferences[]'"
 
 p "you can manually do some testing on the canary clusters"
 p "if everything works fine, apply the config to all the clusters"
 pe "cat cma-rolling-upgrade-with-test-step2.yaml"
 pe "kubectl apply -f cma-rolling-upgrade-with-test-step2.yaml"
 pe "kubectl get clustermanagementaddon helloworld -oyaml"
-pe "kubectl get managedclusteraddon -A -o=jsonpath='{range .items[*]}{.metadata.namespace}{\"\\t\"}{.status.configReferences}{\"\\n\"}{end}'"
+pe "kubectl get managedclusteraddon -A -ojson | jq '.items[] | .metadata.namespace, .status.configReferences[]'"
 pe ""
 
 clear
