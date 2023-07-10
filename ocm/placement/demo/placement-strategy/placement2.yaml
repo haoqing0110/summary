@@ -1,0 +1,30 @@
+#  clusteradm clusterset bind global --namespace default
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: placement2
+  namespace: default
+spec:
+  clusterSets:
+    - global
+  tolerations:
+  - key: cluster.open-cluster-management.io/unreachable
+    operator: Exists
+  - key: cluster.open-cluster-management.io/unavailable
+    operator: Exists
+  decisionStrategy:
+    groupStrategy:
+      clustersPerDecisionGroup: 150
+      decisionGroups:
+      - groupName: prod-canary-west
+        groupClusterSelector:
+          labelSelector:
+            matchExpressions:
+              - key: prod-canary-west
+                operator: Exists
+      - groupName: prod-canary-east
+        groupClusterSelector:
+          labelSelector:
+            matchExpressions:
+              - key: prod-canary-east
+                operator: Exists
