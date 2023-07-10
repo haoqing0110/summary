@@ -1,0 +1,52 @@
+apiVersion: addon.open-cluster-management.io/v1alpha1
+kind: ClusterManagementAddOn
+metadata:
+  name: managed-serviceaccount
+  annotations:
+    meta.helm.sh/release-name: managed-serviceaccount
+    meta.helm.sh/release-namespace: open-cluster-management-addon
+#    addon.open-cluster-management.io/lifecycle: "addon-manager"
+  labels:
+    app.kubernetes.io/managed-by: Helm
+spec:
+  placementRefs:
+  - name: placement-canary
+    namespace: default
+    rolloutStrategy:
+      timeout: None
+      type: All
+      mandatoryDecisionGroups:
+      - "aaa"
+      - 2
+  addOnMeta:
+    description: managed-serviceaccount
+    displayName: managed-serviceaccount
+  supportedConfigs:
+  - group: addon.open-cluster-management.io
+    resource: addondeploymentconfigs
+    defaultConfig:
+      name: config-v1
+      namespace: open-cluster-management
+#  installStrategy:
+#    type: Manual
+  installStrategy:
+    type: Placements
+    placements:
+    - name: placement-canary
+      namespace: default
+      configs:
+      - group: addon.open-cluster-management.io
+        resource: addondeploymentconfigs
+        name: config-v2
+        namespace: open-cluster-management
+#    - name: placement-canary
+#      namespace: default
+#      configs:
+#      - group: addon.open-cluster-management.io
+#        resource: addondeploymentconfigs
+#        name: config-v2
+#        namespace: open-cluster-management
+#      rolloutStrategy:
+#        type: RollingUpdate
+#        rollingUpdate:
+#          maxConcurrency: "25%"

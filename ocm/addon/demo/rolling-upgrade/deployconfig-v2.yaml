@@ -1,0 +1,12 @@
+apiVersion: addon.open-cluster-management.io/v1alpha1
+kind: AddOnDeploymentConfig
+metadata:
+  name: config-v2
+  namespace: open-cluster-management
+spec:
+  nodePlacement:
+    tolerations:
+    - effect: NoSchedule
+      key: node-dedicated
+      value: acm-addon-v2
+      operator: Equal
