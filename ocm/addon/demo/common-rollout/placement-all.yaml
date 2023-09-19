@@ -16,15 +16,9 @@ spec:
     groupStrategy:
       clustersPerDecisionGroup: 150
       decisionGroups:
-      - groupName: prod-canary-west
+      - groupName: canary
         groupClusterSelector:
           labelSelector:
             matchExpressions:
-              - key: prod-canary-west
-                operator: Exists
-      - groupName: prod-canary-east
-        groupClusterSelector:
-          labelSelector:
-            matchExpressions:
-              - key: prod-canary-east
+              - key: canary
                 operator: Exists

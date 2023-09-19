@@ -1,6 +1,0 @@
-apiVersion: addon.open-cluster-management.io/v1alpha1
-kind: AddOnHubConfig
-metadata:
-  name: config-v1
-spec:
-  desiredVersion: v1
