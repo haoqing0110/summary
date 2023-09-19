@@ -58,8 +58,6 @@ pe "kubectl --context kind-cluster2 get pods -n default | grep resource-usage-co
 pe "kubectl get addonplacementscore -A"
 pe "kubectl get addonplacementscore -n cluster1 resource-usage-score -oyaml"
 pe "kubectl get addonplacementscore -A -o=jsonpath='{range .items[*]}{.metadata.namespace}{\"\t\"}{.status.scores}{\"\n\"}{end}'"
-pe "kubectl --context kind-cluster1 get pods -A"
-pe "kubectl --context kind-cluster2 get pods -A"
 
 pe "cat placement4.yaml"
 pe "kubectl apply -f placement4.yaml -n ${NS}"
