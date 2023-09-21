@@ -4,23 +4,23 @@ cd $(dirname ${BASH_SOURCE})
 
 set -e
 
-hub=${CLUSTER1:-kind}
+hub=${CLUSTER1:-hub}
 c1=${CLUSTER1:-cluster1}
 c2=${CLUSTER2:-cluster2}
-c3=${CLUSTER2:-cluster3}
+c3=${CLUSTER3:-cluster3}
 
 hubctx="kind-${hub}"
 c1ctx="kind-${c1}"
 c2ctx="kind-${c2}"
 c3ctx="kind-${c3}"
 
-#kind create cluster --name "${hub}"
+kind create cluster --name "${hub}"
 kind create cluster --name "${c1}"
 kind create cluster --name "${c2}"
 kind create cluster --name "${c3}"
 
 echo "Initialize the ocm hub cluster\n"
-clusteradm init --wait --context ${hubctx}
+clusteradm init --bundle-version="latest" --wait --context ${hubctx}
 joincmd=$(clusteradm get token --context ${hubctx} | grep clusteradm)
 
 echo "Join cluster1 to hub\n"
