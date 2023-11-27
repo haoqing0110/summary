@@ -1,0 +1,56 @@
+apiVersion: work.open-cluster-management.io/v1alpha1
+kind: ManifestWorkReplicaSet
+metadata:
+  name: example-manifestwork
+  namespace: default
+spec:
+  placementRefs:
+    - name: default
+      rolloutStrategy:
+        type: Progressive
+        progressive:
+          progressDeadline: 3m
+          maxFailures: 1
+          maxConcurrency: 1
+  manifestWorkTemplate:
+    workload:
+      manifests:
+      - apiVersion: v1
+        kind: ServiceAccount
+        metadata:
+          namespace: default
+          name: my-sa
+      - apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          namespace: default
+          name: ubuntu-deployment
+          labels:
+            app: ubuntu
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: ubuntu
+          template:
+            metadata:
+              labels:
+                app: ubuntu
+            spec:
+              serviceAccountName: my-sa
+              containers:
+                - name: ubuntu
+                  image: ubuntu:20.04
+                  command: ["sh", "-c", "sleep infinity"]
+    manifestConfigs:
+      - resourceIdentifier:
+          group: apps
+          resource: deployments
+          namespace: default
+          name: ubuntu-deployment
+        feedbackRules:
+          - type: WellKnownStatus
+          - type: JSONPaths
+            jsonPaths:
+              - name: isAvailable
+                path: '.status.conditions[?(@.type=="Available")].status'
