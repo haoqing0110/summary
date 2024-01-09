@@ -4,4 +4,4 @@ metadata:
   name: default
   namespace: default
 spec:
-  numberOfClusters: 2
+  numberOfClusters: 3

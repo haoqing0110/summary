@@ -12,6 +12,7 @@ spec:
           progressDeadline: 3m
           maxFailures: 1
           maxConcurrency: 1
+          minSuccessTime: "1s"
   manifestWorkTemplate:
     workload:
       manifests:
