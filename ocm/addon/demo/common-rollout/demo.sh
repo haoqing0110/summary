@@ -130,4 +130,21 @@ check_addon ${c3ctx} ${c1ctx} ${c2ctx}
 pe ""
 
 clear
+p "Case 5: progressive with minSuccessTime"
+pe "cat cma-progressive-minsuccesstime.yaml"
+pe "kubectl apply -f cma-progressive-minsuccesstime.yaml"
+pe "kubectl apply -f managed-serviceaccount-0.4.4.yaml"
+pe "kubectl get cma managed-serviceaccount -oyaml"
+pe "kubectl get mca -A -ojson | jq '.items[] | .metadata.namespace, .status.configReferences[]' | grep addontemplates -B 12"
+pe ""
+
+clear
+p "Case 6: progressive with maxFailures"
+pe "cat cma-progressive-maxfailures-1.yaml"
+disable_work
+pe "kubectl apply -f cma-progressive-maxfailures-1.yaml"
+pe "kubectl apply -f managed-serviceaccount-0.4.5.yaml"
+pe "kubectl get cma managed-serviceaccount -oyaml"
+pe "kubectl get mca -A -ojson | jq '.items[] | .metadata.namespace, .status.configReferences[]' | grep addontemplates -B 12"
+pe ""
 

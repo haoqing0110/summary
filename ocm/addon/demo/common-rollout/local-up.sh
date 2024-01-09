@@ -20,7 +20,7 @@ kind create cluster --name "${c2}"
 kind create cluster --name "${c3}"
 
 echo "Initialize the ocm hub cluster\n"
-clusteradm init --bundle-version="latest" --wait --context ${hubctx}
+clusteradm init --feature-gates="ManifestWorkReplicaSet=true,ManagedClusterAutoApproval=true" --bundle-version="latest" --wait --context ${hubctx}
 joincmd=$(clusteradm get token --context ${hubctx} | grep clusteradm)
 
 echo "Join cluster1 to hub\n"
