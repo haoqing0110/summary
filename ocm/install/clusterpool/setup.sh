@@ -1,6 +1,6 @@
 #!/bin/bash
 #Refer to https://github.com/songleo/songleo.github.io/blob/master/_posts/clusterpool-share.md
-prefix=server-foundation-sno
+prefix=server-foundation-sno-lite
 oc get ClusterClaim.hive.openshift.io
 
 deploy_ns=$(oc describe -f $1 | grep Namespace | grep $prefix | awk '{print $2}')
