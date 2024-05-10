@@ -30,6 +30,6 @@ spec:
     group: addon.open-cluster-management.io
     resource: addondeploymentconfigs
   - defaultConfig:
-      name: managed-serviceaccount-0.4.2
+      name: managed-serviceaccount-0.5.2
     group: addon.open-cluster-management.io
     resource: addontemplates
