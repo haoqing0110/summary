@@ -2,6 +2,25 @@ apiVersion: cluster.open-cluster-management.io/v1
 kind: ManagedCluster
 metadata:
   name: fakeclusterNUM
+  labels:
+    cloud: Amazon
+    cluster.open-cluster-management.io/clusterset: default
+    clusterID: f6b93521-b7ef-405a-ba5e-85bf093330b4-NUM
+    fake.feature.open-cluster-management.io/addon-application-manager: available
+    fake.feature.open-cluster-management.io/addon-cert-policy-controller: available
+    fake.feature.open-cluster-management.io/addon-cluster-proxy: available
+    fake.feature.open-cluster-management.io/addon-config-policy-controller: available
+    fake.feature.open-cluster-management.io/addon-governance-policy-framework: available
+    fake.feature.open-cluster-management.io/addon-hypershift-addon: available
+    fake.feature.open-cluster-management.io/addon-iam-policy-controller: available
+    fake.feature.open-cluster-management.io/addon-managed-serviceaccount: available
+    fake.feature.open-cluster-management.io/addon-work-manager: available
+    name: fakeclusterNUM
+    fake.openshiftVersion: 4.14.3
+    fake.openshiftVersion-major: "4"
+    fake.openshiftVersion-major-minor: "4.14"
+    velero.io/exclude-from-backup: "true"
+    vendor: OpenShift
 spec:
   hubAcceptsClient: true
   leaseDurationSeconds: 60
