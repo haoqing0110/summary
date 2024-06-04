@@ -1,0 +1,7 @@
+apiVersion: cluster.open-cluster-management.io/v1
+kind: ManagedCluster
+metadata:
+  name: fakeclusterNUM
+spec:
+  hubAcceptsClient: true
+  leaseDurationSeconds: 60
