@@ -57,7 +57,7 @@ metadata:
 spec:
   kubeConfig:
     locationType: Secret
-    location: worker1-secret
+    location: cluster1-secret
     # a secret called "worker1-secret" should be created in the namespace the kueue
     # controller manager runs into, holding the kubeConfig needed to connect to the
     # worker cluster in the "kubeconfig" key;
@@ -69,7 +69,7 @@ metadata:
 spec:
   kubeConfig:
     locationType: Secret
-    location: worker2-secret
+    location: cluster2-secret
 #---
 #apiVersion: kueue.x-k8s.io/v1beta1
 #kind: AdmissionCheck

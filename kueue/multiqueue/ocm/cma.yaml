@@ -1,0 +1,28 @@
+apiVersion: addon.open-cluster-management.io/v1alpha1
+kind: ClusterManagementAddOn
+metadata:
+  annotations:
+    addon.open-cluster-management.io/lifecycle: addon-manager
+    meta.helm.sh/release-name: managed-serviceaccount
+    meta.helm.sh/release-namespace: open-cluster-management-addon
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: managed-serviceaccount
+spec:
+  addOnMeta:
+    description: managed-serviceaccount
+    displayName: managed-serviceaccount
+  installStrategy:
+    placements:
+    - name: placement-all
+      namespace: default
+      rolloutStrategy:
+        type: All
+    type: Placements
+  supportedConfigs:
+  - group: addon.open-cluster-management.io
+    resource: addondeploymentconfigs
+  - defaultConfig:
+      name: managed-serviceaccount-0.6.0
+    group: addon.open-cluster-management.io
+    resource: addontemplates
