@@ -1,0 +1,15 @@
+apiVersion: hive.openshift.io/v1
+kind: ClusterClaim
+metadata:
+ name: hq-hub
+ namespace: server-foundation
+ annotations:
+   cluster.open-cluster-management.io/createmanagedcluster: "false"
+ labels:
+   do-not-hibernate: "true"
+spec:
+ clusterPoolName: sf-prow-aws-ocp414-sno-us-east-1
+ subjects:
+ - apiGroup: rbac.authorization.k8s.io
+   kind: Group
+   name: Server Foundation

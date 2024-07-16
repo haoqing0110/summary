@@ -1,11 +1,11 @@
 apiVersion: hive.openshift.io/v1
 kind: ClusterClaim
 metadata:
- name: hq3
+ name: hq-sno1
  namespace: server-foundation
  annotations:
    cluster.open-cluster-management.io/createmanagedcluster: "false"
-# labels:
+#labels:
 #   do-not-hibernate: "true"
 spec:
  clusterPoolName: server-foundation-sno-lite
