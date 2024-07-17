@@ -14,7 +14,7 @@ spec:
     displayName: managed-serviceaccount
   installStrategy:
     placements:
-    - name: placement-all
+    - name: placement-spoke
       namespace: default
       rolloutStrategy:
         type: All
