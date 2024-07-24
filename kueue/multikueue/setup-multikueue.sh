@@ -2,7 +2,7 @@
 
 set -e
 
-hub=${CLUSTER1:-local-cluster}
+hub=${CLUSTER1:-hub}
 c1=${CLUSTER1:-cluster1}
 c2=${CLUSTER2:-cluster2}
 
@@ -17,10 +17,12 @@ echo "Setup queue on the spoke\n"
 kubectl apply -f single-clusterqueue-setup-mwrs.yaml
 
 echo "Setup MultiKueue Kubeconfigs from hub\n" 
-cd authtokenrequest
-./create-multikueue-kubeconfig-from-hub.sh ${c1}
-./create-multikueue-kubeconfig-from-hub.sh ${c2}
-cd -
+kubectl apply -f authtokenrequest/authtokenrequest-c1.yaml
+kubectl apply -f authtokenrequest/authtokenrequest-c2.yaml
+#cd authtokenrequest
+#./create-multikueue-kubeconfig-from-hub.sh ${c1}
+#./create-multikueue-kubeconfig-from-hub.sh ${c2}
+#cd -
 
 echo "Create a sample multikueue on hub\n"
 kubectl apply -f multikueue-setup.yaml --context ${hubctx}
@@ -30,8 +32,8 @@ kubectl get admissionchecks sample-multikueue -o jsonpath="{range .status.condit
 kubectl get multikueuecluster multikueue-test-worker1 -o jsonpath="{range .status.conditions[?(@.type == \"Active\")]}MC - Active: {@.status} Reason: {@.reason} Message: {@.message}{'\n'}{end}"
 kubectl get multikueuecluster multikueue-test-worker2 -o jsonpath="{range .status.conditions[?(@.type == \"Active\")]}MC - Active: {@.status} Reason: {@.reason} Message: {@.message}{'\n'}{end}"
 
-echo "Deploy job from hub\n" 
-kubectl create -f job.yaml --context ${hubctx}
+#echo "Deploy job from hub\n" 
+#kubectl create -f job.yaml --context ${hubctx}
 #kubectl get workload --context kind-cluster1 --watch
 #kubectl get workload --context kind-cluster2 --watch
 

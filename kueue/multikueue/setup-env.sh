@@ -4,7 +4,7 @@ cd $(dirname ${BASH_SOURCE})
 
 set -e
 
-hub=${CLUSTER1:-local-cluster}
+hub=${CLUSTER1:-hub}
 c1=${CLUSTER1:-cluster1}
 c2=${CLUSTER2:-cluster2}
 
@@ -21,7 +21,7 @@ clusteradm init --feature-gates="ManifestWorkReplicaSet=true,ManagedClusterAutoA
 joincmd=$(clusteradm get token --context ${hubctx} | grep clusteradm)
 
 echo "Join local-cluster\n"
-$(echo ${joincmd} --force-internal-endpoint-lookup --wait --context ${hubctx} | sed "s/<cluster_name>/$hub/g")
+$(echo ${joincmd} --force-internal-endpoint-lookup --wait --context ${hubctx} | sed "s/<cluster_name>/local-cluster/g")
 
 echo "Join cluster1 to hub\n"
 $(echo ${joincmd} --force-internal-endpoint-lookup --wait --context ${c1ctx} | sed "s/<cluster_name>/$c1/g")
@@ -30,7 +30,7 @@ echo "Join cluster2 to hub\n"
 $(echo ${joincmd} --force-internal-endpoint-lookup --wait --context ${c2ctx} | sed "s/<cluster_name>/$c2/g")
 
 echo "Accept join of local-cluster, cluster1 and cluster2"
-clusteradm accept --context ${hubctx} --clusters ${hub},${c1},${c2} --wait
+clusteradm accept --context ${hubctx} --clusters local-cluster,${c1},${c2} --wait
 
 kubectl get managedclusters --all-namespaces --context ${hubctx}
 
@@ -39,6 +39,18 @@ clusteradm create clusterset spoke
 clusteradm clusterset set spoke --clusters ${c1},${c2}
 clusteradm clusterset bind spoke --namespace default
 clusteradm clusterset bind global --namespace default
+
+echo "Patch image"
+kubectl patch clusterrole cluster-manager --type='json' -p "$(cat env/patch-clusterrole.json)"
+kubectl patch deployment cluster-manager -n open-cluster-management --type=json -p='[
+  {"op": "replace", "path": "/spec/template/spec/containers/0/image", "value": "quay.io/haoqing/registration-operator:latest"},
+  {"op": "replace", "path": "/spec/template/spec/containers/0/imagePullPolicy", "value": "Always"}
+]'
+kubectl patch clustermanager cluster-manager --type=json -p='[{"op": "replace", "path": "/spec/registrationImagePullSpec", "value": "quay.io/haoqing/registration:latest"}]'
+
+echo "Install CRds"
+kubectl create -f env/multicluster.x-k8s.io_authtokenrequests.yaml
+kubectl create -f env/multicluster.x-k8s.io_clusterprofiles.yaml
 
 echo "Install managed-serviceaccount\n"
 cd /root/go/src/open-cluster-management.io/managed-serviceaccount
@@ -61,4 +73,5 @@ kubectl apply -f env/placement.yaml || true
 echo "Install cluster-permission \n"
 cd /root/go/src/open-cluster-management.io/cluster-permission
 make install
-make run
+make deploy
+

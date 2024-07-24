@@ -19,7 +19,6 @@ spec:
       - name: "memory"
         nominalQuota: 36Gi
   admissionChecks:
-#  - ocm-placement
   - sample-multikueue
 ---
 apiVersion: kueue.x-k8s.io/v1beta1
@@ -57,7 +56,7 @@ metadata:
 spec:
   kubeConfig:
     locationType: Secret
-    location: cluster1-secret
+    location: multikueue-ocm-sa-cluster1-kubeconfig
     # a secret called "worker1-secret" should be created in the namespace the kueue
     # controller manager runs into, holding the kubeConfig needed to connect to the
     # worker cluster in the "kubeconfig" key;
@@ -69,17 +68,4 @@ metadata:
 spec:
   kubeConfig:
     locationType: Secret
-    location: cluster2-secret
-#---
-#apiVersion: kueue.x-k8s.io/v1beta1
-#kind: AdmissionCheck
-#metadata:
-#  name: ocm-placement
-#spec:
-#  controllerName: ocm.io/placement  // external controller
-#  parameters:
-#    apiGroup: ocm
-#    kind: Placement
-#    name: placement-gpu
-#status: 
-#  xxx: false // set to true when the controller get placementdecision and write it to MultiKueueConfig
+    location: multikueue-ocm-sa-cluster2-kubeconfig

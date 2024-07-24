@@ -1,0 +1,66 @@
+apiVersion: multicluster.x-k8s.io/v1alpha1
+kind: AuthTokenRequest
+metadata:
+  name: kueue-cluster2
+  namespace: kueue-system
+spec:
+  targetClusterProfile:
+    apiGroup: multicluster.x-k8s.io
+    kind: ClusterProfile
+    name: cluster2
+    namespace: open-cluster-management
+  serviceAccountName: multikueue-ocm-sa-cluster2
+  clusterRoles:
+  - name: multikueue-ocm-sa-cluster2
+    rules:
+    - apiGroups:
+      - batch
+      resources:
+      - jobs
+      verbs:
+      - create
+      - delete
+      - get
+      - list
+      - watch
+    - apiGroups:
+      - batch
+      resources:
+      - jobs/status
+      verbs:
+      - get
+    - apiGroups:
+      - jobset.x-k8s.io
+      resources:
+      - jobsets
+      verbs:
+      - create
+      - delete
+      - get
+      - list
+      - watch
+    - apiGroups:
+      - jobset.x-k8s.io
+      resources:
+      - jobsets/status
+      verbs:
+      - get
+    - apiGroups:
+      - kueue.x-k8s.io
+      resources:
+      - workloads
+      verbs:
+      - create
+      - delete
+      - get
+      - list
+      - watch
+    - apiGroups:
+      - kueue.x-k8s.io
+      resources:
+      - workloads/status
+      verbs:
+      - get
+      - patch
+      - update
+
