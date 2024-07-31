@@ -37,11 +37,11 @@ c2ctx="kind-cluster2"
 c3ctx="kind-cluster3"
 kubectl config use-context ${hubctx}
 ./addon.sh
-kubectl delete -f managed-serviceaccount-0.5.1.yaml
-kubectl delete -f managed-serviceaccount-0.5.2.yaml
-kubectl delete -f managed-serviceaccount-0.5.3.yaml
-kubectl delete -f managed-serviceaccount-0.5.4.yaml
-kubectl delete -f managed-serviceaccount-0.5.5.yaml
+kubectl delete -f managed-serviceaccount-0.6.1.yaml
+kubectl delete -f managed-serviceaccount-0.6.2.yaml
+kubectl delete -f managed-serviceaccount-0.6.3.yaml
+kubectl delete -f managed-serviceaccount-0.6.4.yaml
+kubectl delete -f managed-serviceaccount-0.6.5.yaml
 clusteradm clusterset bind global --namespace default
 kubectl label managedcluster cluster3 canary=true
 kubectl apply -f placement-all.yaml
@@ -89,7 +89,7 @@ pe "kubectl get cma managed-serviceaccount -oyaml"
 pe "kubectl get mca -A"
 pe "kubectl get pods -A"
 pe "kubectl get addontemplate"
-pe "kubectl get addontemplate managed-serviceaccount-0.5.0 -oyaml"
+pe "kubectl get addontemplate managed-serviceaccount-0.6.0 -oyaml"
 pe ""
 clear
 
@@ -109,7 +109,7 @@ p "Case 2: update all the add-on agents when config changes"
 pe "cat cma-update-all.yaml"
 disable_work
 pe "kubectl apply -f cma-update-all.yaml"
-pe "kubectl apply -f managed-serviceaccount-0.5.1.yaml"
+pe "kubectl apply -f managed-serviceaccount-0.6.1.yaml"
 check_addon ${c1ctx} ${c2ctx} ${c3ctx}
 pe ""
 
@@ -118,7 +118,7 @@ p "Case 3: progressive per cluster when config changes"
 pe "cat cma-progressive.yaml"
 disable_work
 pe "kubectl apply -f cma-progressive.yaml"
-pe "kubectl apply -f managed-serviceaccount-0.5.2.yaml"
+pe "kubectl apply -f managed-serviceaccount-0.6.2.yaml"
 check_addon ${c3ctx} ${c1ctx} ${c2ctx}
 pe ""
 
@@ -127,7 +127,7 @@ p "Case 4: progressive per group when config changes"
 pe "cat cma-progressive-per-group.yaml"
 disable_work
 pe "kubectl apply -f cma-progressive-per-group.yaml"
-pe "kubectl apply -f managed-serviceaccount-0.5.3.yaml"
+pe "kubectl apply -f managed-serviceaccount-0.6.3.yaml"
 check_addon ${c3ctx} ${c1ctx} ${c2ctx}
 pe ""
 
@@ -135,7 +135,7 @@ clear
 p "Case 5: progressive with minSuccessTime"
 pe "cat cma-progressive-minsuccesstime.yaml"
 pe "kubectl apply -f cma-progressive-minsuccesstime.yaml"
-pe "kubectl apply -f managed-serviceaccount-0.5.4.yaml"
+pe "kubectl apply -f managed-serviceaccount-0.6.4.yaml"
 pe "kubectl get cma managed-serviceaccount -oyaml"
 pe "kubectl get mca -A -ojson | jq '.items[] | .metadata.namespace, .status.configReferences[]' | grep addontemplates -B 12"
 pe ""
@@ -145,7 +145,7 @@ p "Case 6: progressive with maxFailures"
 pe "cat cma-progressive-maxfailures-1.yaml"
 disable_work
 pe "kubectl apply -f cma-progressive-maxfailures-1.yaml"
-pe "kubectl apply -f managed-serviceaccount-0.5.5.yaml"
+pe "kubectl apply -f managed-serviceaccount-0.6.5.yaml"
 pe "kubectl get cma managed-serviceaccount -oyaml"
 pe "kubectl get mca -A -ojson | jq '.items[] | .metadata.namespace, .status.configReferences[]' | grep addontemplates -B 12"
 pe ""

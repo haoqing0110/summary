@@ -24,6 +24,6 @@ spec:
     type: Placements
   supportedConfigs:
   - defaultConfig:
-      name: managed-serviceaccount-0.5.4
+      name: managed-serviceaccount-0.6.4
     group: addon.open-cluster-management.io
     resource: addontemplates
