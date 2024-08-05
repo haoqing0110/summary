@@ -40,13 +40,15 @@ clusteradm clusterset set spoke --clusters ${c1},${c2}
 clusteradm clusterset bind spoke --namespace default
 clusteradm clusterset bind global --namespace default
 
-echo "Patch image"
+echo "Patch permission"
 kubectl patch clusterrole cluster-manager --type='json' -p "$(cat env/patch-clusterrole.json)"
+echo "Patch image"
 kubectl patch deployment cluster-manager -n open-cluster-management --type=json -p='[
   {"op": "replace", "path": "/spec/template/spec/containers/0/image", "value": "quay.io/haoqing/registration-operator:latest"},
   {"op": "replace", "path": "/spec/template/spec/containers/0/imagePullPolicy", "value": "Always"}
 ]'
 kubectl patch clustermanager cluster-manager --type=json -p='[{"op": "replace", "path": "/spec/registrationImagePullSpec", "value": "quay.io/haoqing/registration:latest"}]'
+kubectl patch clustermanager cluster-manager --type=json -p='[{"op": "replace", "path": "/spec/placementImagePullSpec", "value": "quay.io/haoqing/placement:latest"}]'
 
 echo "Install CRds"
 kubectl create -f env/multicluster.x-k8s.io_authtokenrequests.yaml

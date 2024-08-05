@@ -9,6 +9,7 @@ c2=${CLUSTER2:-cluster2}
 hubctx="kind-${hub}"
 
 kubectl config use-context ${hubctx}
+clusteradm clusterset bind spoke --namespace kueue-system
 
 echo "Enable multiqueue on the hub\n" 
 kubectl patch deployment kueue-controller-manager -n kueue-system --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/args", "value": ["--config=/controller_manager_config.yaml", "--zap-log-level=2", "--feature-gates=MultiKueue=true"]}]' --context ${hubctx}
@@ -25,7 +26,7 @@ kubectl apply -f authtokenrequest/authtokenrequest-c2.yaml
 #cd -
 
 echo "Create a sample multikueue on hub\n"
-kubectl apply -f multikueue-setup.yaml --context ${hubctx}
+kubectl apply -f multikueue-setup-with-ocm.yaml --context ${hubctx}
 sleep 60
 kubectl get clusterqueues cluster-queue -o jsonpath="{range .status.conditions[?(@.type == \"Active\")]}CQ - Active: {@.status} Reason: {@.reason} Message: {@.message}{'\n'}{end}"
 kubectl get admissionchecks sample-multikueue -o jsonpath="{range .status.conditions[?(@.type == \"Active\")]}AC - Active: {@.status} Reason: {@.reason} Message: {@.message}{'\n'}{end}"
