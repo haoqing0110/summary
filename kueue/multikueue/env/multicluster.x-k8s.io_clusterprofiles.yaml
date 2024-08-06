@@ -160,11 +160,11 @@ spec:
                       - name
                       - namespace
                       type: object
-                    name:
+                    consumer:
                       type: string
                   required:
                   - accessRef
-                  - name
+                  - consumer
                   type: object
                 type: array
               properties:

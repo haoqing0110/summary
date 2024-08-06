@@ -9,9 +9,9 @@ spec:
     kind: ClusterProfile
     name: cluster1
     namespace: open-cluster-management
-  serviceAccountName: multikueue-ocm-sa-cluster1
+  serviceAccountName: kueue-admin-cluster1
   clusterRoles:
-  - name: multikueue-ocm-sa-cluster1
+  - name: kueue-admin-cluster1
     rules:
     - apiGroups:
       - batch

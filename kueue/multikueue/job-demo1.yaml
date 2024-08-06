@@ -1,13 +1,13 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  generateName: sample-job
+  generateName: demo1-job
   namespace: default
   labels:
-    kueue.x-k8s.io/queue-name: user-queue
+    kueue.x-k8s.io/queue-name: user-queue-demo1
 spec:
-  parallelism: 3
-  completions: 3
+  parallelism: 1
+  completions: 1
   suspend: true
   template:
     spec:
@@ -19,4 +19,8 @@ spec:
           requests:
             cpu: 1
             memory: "200Mi"
+          limits:
+            cpu: 1
+            memory: "200Mi"
       restartPolicy: Never
+

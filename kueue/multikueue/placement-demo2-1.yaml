@@ -1,9 +1,8 @@
-#  clusteradm clusterset bind global --namespace default
 apiVersion: cluster.open-cluster-management.io/v1beta1
 kind: Placement
 metadata:
-  name: placement-spoke
-  namespace: default
+  name: placement-demo2
+  namespace: kueue-system
 spec:
   clusterSets:
   - spoke
@@ -12,3 +11,9 @@ spec:
     operator: Exists
   - key: cluster.open-cluster-management.io/unavailable
     operator: Exists
+  predicates:
+    - requiredClusterSelector:
+        labelSelector:
+          matchLabels:
+            accelerator: nvidia-tesla-t4
+

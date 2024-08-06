@@ -1,62 +1,62 @@
 apiVersion: kueue.x-k8s.io/v1beta1
 kind: ResourceFlavor
 metadata:
-  name: "default-flavor"
+  name: "default-flavor-demo1"
 ---
 apiVersion: kueue.x-k8s.io/v1beta1
 kind: ClusterQueue
 metadata:
-  name: "cluster-queue"
+  name: "cluster-queue-demo1"
 spec:
   namespaceSelector: {} # match all.
   resourceGroups:
   - coveredResources: ["cpu", "memory"]
     flavors:
-    - name: "default-flavor"
+    - name: "default-flavor-demo1"
       resources:
       - name: "cpu"
         nominalQuota: 9
       - name: "memory"
         nominalQuota: 36Gi
   admissionChecks:
-  - sample-multikueue
+  - multikueue-demo1
 ---
 apiVersion: kueue.x-k8s.io/v1beta1
 kind: LocalQueue
 metadata:
   namespace: "default"
-  name: "user-queue"
+  name: "user-queue-demo1"
 spec:
-  clusterQueue: "cluster-queue"
+  clusterQueue: "cluster-queue-demo1"
 ---
 apiVersion: kueue.x-k8s.io/v1beta1
 kind: AdmissionCheck
 metadata:
-  name: sample-multikueue
+  name: multikueue-demo1
 spec:
   controllerName: kueue.x-k8s.io/multikueue
   parameters:
     apiGroup: kueue.x-k8s.io
     kind: MultiKueueConfig
-    name: multikueue-test
+    name: multikueue-config-demo1
 ---
 apiVersion: kueue.x-k8s.io/v1alpha1
 kind: MultiKueueConfig
 metadata:
-  name: multikueue-test
+  name:  multikueue-config-demo1
 spec:
   clusters:
-  - multikueue-test-worker1
-  - multikueue-test-worker2
+  - multikueue-demo1-cluster1
+  - multikueue-demo1-cluster2
 ---
 apiVersion: kueue.x-k8s.io/v1alpha1
 kind: MultiKueueCluster
 metadata:
-  name: multikueue-test-worker1
+  name: multikueue-demo1-cluster1
 spec:
   kubeConfig:
     locationType: Secret
-    location: multikueue-ocm-sa-cluster1-kubeconfig
+    location: kueue-admin-cluster1-kubeconfig
     # a secret called "worker1-secret" should be created in the namespace the kueue
     # controller manager runs into, holding the kubeConfig needed to connect to the
     # worker cluster in the "kubeconfig" key;
@@ -64,8 +64,9 @@ spec:
 apiVersion: kueue.x-k8s.io/v1alpha1
 kind: MultiKueueCluster
 metadata:
-  name: multikueue-test-worker2
+  name: multikueue-demo1-cluster2
 spec:
   kubeConfig:
     locationType: Secret
-    location: multikueue-ocm-sa-cluster2-kubeconfig
+    location: kueue-admin-cluster2-kubeconfig
+

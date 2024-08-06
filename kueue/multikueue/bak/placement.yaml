@@ -2,11 +2,11 @@
 apiVersion: cluster.open-cluster-management.io/v1beta1
 kind: Placement
 metadata:
-  name: placement-spoke
+  name: placement-all
   namespace: default
 spec:
   clusterSets:
-  - spoke
+  - global
   tolerations:
   - key: cluster.open-cluster-management.io/unreachable
     operator: Exists
