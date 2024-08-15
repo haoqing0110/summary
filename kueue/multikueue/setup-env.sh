@@ -115,5 +115,6 @@ kubectl apply -f env/authtokenrequest-c1.yaml
 kubectl apply -f env/authtokenrequest-c2.yaml
 kubectl apply -f env/authtokenrequest-c3.yaml
 
-echo "kubectl edit-status node cluster2-control-plane --context ${c2ctx}"
-echo "kubectl edit-status node cluster3-control-plane --context ${c3ctx}"
+echo "IMPORTANT: RUN BELOW COMMAND MANUALLY on cluster2 and cluster3 !!!"
+echo "kubectl edit-status node cluster2-control-plane --context ${c2ctx}" with nvidia.com/gpu: "3"
+echo "kubectl edit-status node cluster3-control-plane --context ${c3ctx}" with nvidia.com/gpu: "3"
