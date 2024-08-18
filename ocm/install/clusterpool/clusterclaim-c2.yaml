@@ -8,7 +8,7 @@ metadata:
  labels:
    do-not-hibernate: "true"
 spec:
- clusterPoolName: sf-prow-aws-ocp414-sno-us-east-2
+ clusterPoolName: sf-prow-aws-ocp414-sno-us-east-1
  subjects:
  - apiGroup: rbac.authorization.k8s.io
    kind: Group

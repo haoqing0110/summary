@@ -1,6 +1,6 @@
 #!/bin/bash
 #Refer to https://github.com/songleo/songleo.github.io/blob/master/_posts/clusterpool-share.md
-prefix=sf-prow-aws-ocp414-sno-us-east-2
+prefix=sf-prow-aws-ocp414-sno-us-east-1
 #prefix=server-foundation-sno-lite
 oc get ClusterClaim.hive.openshift.io
 
