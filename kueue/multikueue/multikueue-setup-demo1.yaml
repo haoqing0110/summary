@@ -57,7 +57,7 @@ spec:
   kubeConfig:
     locationType: Secret
     location: kueue-admin-cluster1-kubeconfig
-    # a secret called "worker1-secret" should be created in the namespace the kueue
+    # a secret called "kueue-admin-cluster1-kubeconfig" should be created in the namespace the kueue
     # controller manager runs into, holding the kubeConfig needed to connect to the
     # worker cluster in the "kubeconfig" key;
 ---

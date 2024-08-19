@@ -42,7 +42,7 @@ clear
 
 #p "Demo1: Bridge the OCM and Kueue clusters via ClusterProfile."
 #p "OCM is installed with 1 hub cluster and 3 managed clusters."
-#pe "kubectl get mcl"
+#pe "kubectl get managedclusters"
 #
 #p "Kueue is also installed on these clusters."
 #pe "kubectl get pods -n kueue-system --context kind-hub"
@@ -53,12 +53,12 @@ clear
 #pe "kubectl get clusterprofile -A"
 #pe "kubectl get clusterprofile -n open-cluster-management cluster1 -oyaml"
 #
-#p "With Kueue supported in OCM, the clusterprofile status contains the credential to be consumed by Kueue."
+#p "The clusterprofile status contains the credential to be consumed by Kueue."
 #pe "kubectl get clusterprofile -A -ojson | jq '.items[] | .metadata.name, .status.credentials[]'"
 #pe "kubectl get secret -n kueue-system"
 #
 #p "MultiKueue can be easily set up with the help of the ClusterProfile API."
-#p "vim ./multikueue-setup-demo1.yaml"
+#pe "cat ./multikueue-setup-demo1.yaml | less"
 #pe "kubectl apply -f ./multikueue-setup-demo1.yaml"
 #pe "kubectl get multikueuecluster -A -ojson | jq '.items[] | .metadata.name, .status.conditions'"
 #pe "kubectl get admissionchecks -ojson | jq '.items[] | .metadata.name, .status.conditions'"
@@ -76,6 +76,7 @@ clear
 #clear 
 #
 #p "Demo2: Leverage OCM's advanced scheduling features with MultiKueue to intelligently place AI/ML jobs across clusters."
+
 p "Demo2-1: Deploy Kueue workloads (data analysis or AI/ML training jobs) on clusters with GPU type nvidia-tesla-t4."
 
 p "OCM is installed with 1 hub cluster and 3 managed clusters."
@@ -86,9 +87,11 @@ pe "kubectl get pods -n kueue-system --context kind-hub"
 pe "kubectl get pods -n kueue-system --context kind-cluster1"
 p "cluster2 and cluster3 are the same, skip checking."
 
-p "The clusterprofile status contains the credential to be consumed by Kueue."
+p "With ClusterProfile supported in OCM, these managed clusters are also registered as clusterprofiles."
 pe "kubectl get clusterprofile -A"
-pe "kubectl get clusterprofile -A -ojson | jq '.items[] | .metadata.name, .status.credentials[]'"
+
+#p "The clusterprofile status contains the credential to be consumed by Kueue."
+#pe "kubectl get clusterprofile -A -ojson | jq '.items[] | .metadata.name, .status.credentials[]'"
 
 p "Only cluster2 and cluster3 have 3 GPU with type nvidia-tesla-t4."
 pe "kubectl get managedcluster --show-labels"
@@ -106,8 +109,8 @@ pe "cat ./multikueue-setup-demo2.yaml | less"
 pe "kubectl apply -f ./multikueue-setup-demo2.yaml"
 pe "kubectl get multikueueconfig"
 pe "kubectl get multikueueconfig -oyaml"
-pe "kubectl get multikueuecluster"
-pe "kubectl get multikueuecluster -oyaml"
+#pe "kubectl get multikueuecluster"
+#pe "kubectl get multikueuecluster -oyaml"
 pe "kubectl get admissionchecks -ojson | jq '.items[] | .metadata.name, .status.conditions'"
 pe "kubectl get clusterqueues -ojson | jq '.items[] | .metadata.name, .status.conditions'"
 
