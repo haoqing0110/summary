@@ -24,6 +24,6 @@ spec:
           type: AddOn
           addOn:
             resourceName: resource-usage-score
-            scoreName: gpuAvailable
+            scoreName: gpuClusterAvailable
         weight: 1
 

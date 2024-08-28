@@ -43,13 +43,13 @@ clusteradm accept --context ${hubctx} --clusters ${c1},${c2},${c3} --wait
 
 kubectl get managedclusters --all-namespaces --context ${hubctx}
 
-echo "Install Kueue"
+echo "Install Kueue (this can be replaced with OCM Manifestwork in the future)"
 kubectl apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.7.1/manifests.yaml --context ${hubctx}
 kubectl apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.7.1/manifests.yaml --context ${c1ctx}
 kubectl apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.7.1/manifests.yaml --context ${c2ctx}
 kubectl apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.7.1/manifests.yaml --context ${c3ctx}
 
-echo "Install Jobset for MultiKueue"
+echo "Install Jobset for MultiKueue (this can be replaced with OCM Manifestwork in the future)"
 kubectl apply --server-side -f https://github.com/kubernetes-sigs/jobset/releases/download/v0.5.2/manifests.yaml --context ${hubctx}
 kubectl apply --server-side -f https://github.com/kubernetes-sigs/jobset/releases/download/v0.5.2/manifests.yaml --context ${c1ctx}
 kubectl apply --server-side -f https://github.com/kubernetes-sigs/jobset/releases/download/v0.5.2/manifests.yaml --context ${c2ctx}
@@ -73,7 +73,8 @@ kubectl create -f env/multicluster.x-k8s.io_authtokenrequests.yaml
 kubectl create -f env/multicluster.x-k8s.io_clusterprofiles.yaml
 
 echo "Install managed-serviceaccount"
-cd /root/go/src/open-cluster-management.io/managed-serviceaccount
+git clone git@github.com:open-cluster-management-io/managed-serviceaccount.git || true
+cd managed-serviceaccount
 helm uninstall -n open-cluster-management-addon managed-serviceaccount || true
 helm install \
    -n open-cluster-management-addon --create-namespace \
@@ -83,37 +84,45 @@ helm install \
    --set enableAddOnDeploymentConfig=true \
    --set hubDeployMode=AddOnTemplate
 cd -
+rm -r managed-serviceaccount
 
 echo "Install managed-serviceaccount mca"
 clusteradm create clusterset spoke
 clusteradm clusterset set spoke --clusters ${c1},${c2},${c3}
 clusteradm clusterset bind spoke --namespace default
 kubectl apply -f env/placement.yaml || true
-kubectl apply -f env/mg-sa-cma-0.6.0.yaml || true
+kubectl patch clustermanagementaddon managed-serviceaccount --type='json' -p="$(cat env/patch-mg-sa-cma.json)" || true
 
 echo "Install cluster-permission"
-cd /root/go/src/open-cluster-management.io/cluster-permission
-make install
-make deploy
+git clone git@github.com:open-cluster-management-io/cluster-permission.git || true
+cd cluster-permission
+kubectl apply -f config/crds
+kubectl apply -f config/rbac
+kubectl apply -f config/deploy
 cd -
+rm -r cluster-permission
 
 echo "Install resource-usage-collect-addon"
-cd /root/go/src/open-cluster-management.io/addon-contrib/resource-usage-collect-addon
-IMAGE_NAME=quay.io/haoqing/resource-usage-collect-addon-template:latest make deploy
+git clone git@github.com:open-cluster-management-io/addon-contrib.git || true
+cd addon-contrib/resource-usage-collect-addon
+IMAGE_NAME=quay.io/haoqing/resource-usage-collect-addon:latest make deploy
 cd -
+rm -r addon-contrib
 
-echo "Enable multiqueue on the hub"
+echo "Enable MultiKueue on the hub"
 kubectl patch deployment kueue-controller-manager -n kueue-system --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/args", "value": ["--config=/controller_manager_config.yaml", "--zap-log-level=2", "--feature-gates=MultiKueue=true"]}]' 
 
 echo "Setup queue on the spoke"
 kubectl apply -f env/single-clusterqueue-setup-mwrs.yaml
-kubectl label managedcluster cluster2 accelerator=nvidia-tesla-t4
-kubectl label managedcluster cluster3 accelerator=nvidia-tesla-t4
 
 echo "Setup credentials for clusterprofile"
 kubectl apply -f env/authtokenrequest-c1.yaml
 kubectl apply -f env/authtokenrequest-c2.yaml
 kubectl apply -f env/authtokenrequest-c3.yaml
+
+echo "Setup faked GPU on the spoke"
+kubectl label managedcluster cluster2 accelerator=nvidia-tesla-t4
+kubectl label managedcluster cluster3 accelerator=nvidia-tesla-t4
 
 echo "IMPORTANT: RUN BELOW COMMAND MANUALLY on cluster2 and cluster3 !!!"
 echo "kubectl edit-status node cluster2-control-plane --context ${c2ctx}" with nvidia.com/gpu: "3"
