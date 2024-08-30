@@ -150,9 +150,6 @@ pe "cat ./placement-demo2-2.yaml"
 pe "kubectl apply -f ./placement-demo2-2.yaml"
 pe "clusteradm get placements -otable"
 
-# trigger update
-kubectl patch admissioncheck placement-demo2 --type='json' -p='[{"op": "replace", "path": "/spec/retryDelayMinutes", "value": '"14"'}]' >/dev/null 2>&1
-
 p "The placement decision changes, the MultiKueue update dynamically."
 pe "kubectl get multikueueconfig placement-demo2 -ojson | jq '.spec'"
 
