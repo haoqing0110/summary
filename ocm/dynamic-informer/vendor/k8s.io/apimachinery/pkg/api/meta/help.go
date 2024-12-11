@@ -192,11 +192,9 @@ func ExtractList(obj runtime.Object) ([]runtime.Object, error) {
 		case runtime.Object:
 			list[i] = item
 		default:
-			if o, found := raw.Addr().Interface().(runtime.Object); !found {
+			var found bool
+			if list[i], found = raw.Addr().Interface().(runtime.Object); !found {
 				return nil, fmt.Errorf("%v: item[%v]: Expected object, got %#v(%s)", obj, i, raw.Interface(), raw.Kind())
-			} else {
-				copyItem := o.DeepCopyObject()
-				list[i] = copyItem
 			}
 		}
 	}
