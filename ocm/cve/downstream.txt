@@ -1,0 +1,13 @@
+quay.io/acm-d/klusterlet-addon-controller-rhel9@sha256:40361bf415e0fdf06187efc7f527e5cf77c850e084cf518d00552d7c1fc91b61 /usr/local/bin/klusterlet-addon-controller golang.org/x/crypto 
+quay.io/acm-d/klusterlet-addon-controller-rhel9@sha256:40361bf415e0fdf06187efc7f527e5cf77c850e084cf518d00552d7c1fc91b61 /usr/local/bin/klusterlet-addon-controller golang.org/x/oauth2
+quay.io/acm-d/clusterlifecycle-state-metrics-rhel9@sha256:3ae40d3bfe95b942f14604b4086332075524fa951c5b303ff36b6831d17a4828 /usr/local/bin/clusterlifecycle-state-metrics golang.org/x/crypto 
+quay.io/acm-d/clusterlifecycle-state-metrics-rhel9@sha256:3ae40d3bfe95b942f14604b4086332075524fa951c5b303ff36b6831d17a4828 /usr/local/bin/clusterlifecycle-state-metrics golang.org/x/oauth2
+quay.io/acm-d/managedcluster-import-controller-rhel9@sha256:00d9d4bb6e3dc6fbeadd04499ceaa8b11b00c8ea5a8d0146c268ed9ab5d48952 /usr/local/bin/managedcluster-import-controller golang.org/x/crypto 
+quay.io/acm-d/managedcluster-import-controller-rhel9@sha256:00d9d4bb6e3dc6fbeadd04499ceaa8b11b00c8ea5a8d0146c268ed9ab5d48952 /usr/local/bin/managedcluster-import-controller golang.org/x/oauth2
+quay.io/acm-d/multicloud-manager-rhel9@sha256:6c0a4d84da17099ec1c5e4a0ff0bc24b51e7881f03f049805fd534bf7df7ea77 /controller golang.org/x/crypto 
+quay.io/acm-d/multicloud-manager-rhel9@sha256:6c0a4d84da17099ec1c5e4a0ff0bc24b51e7881f03f049805fd534bf7df7ea77 /controller golang.org/x/oauth2
+quay.io/acm-d/multicloud-manager-rhel9@sha256:6c0a4d84da17099ec1c5e4a0ff0bc24b51e7881f03f049805fd534bf7df7ea77 /proxyserver golang.org/x/crypto 
+quay.io/acm-d/multicloud-manager-rhel9@sha256:6c0a4d84da17099ec1c5e4a0ff0bc24b51e7881f03f049805fd534bf7df7ea77 /proxyserver golang.org/x/oauth2
+quay.io/acm-d/multicloud-manager-rhel9@sha256:6c0a4d84da17099ec1c5e4a0ff0bc24b51e7881f03f049805fd534bf7df7ea77 /webhook golang.org/x/crypto 
+quay.io/acm-d/multicloud-manager-rhel9@sha256:6c0a4d84da17099ec1c5e4a0ff0bc24b51e7881f03f049805fd534bf7df7ea77 /webhook golang.org/x/oauth2
+a b c
