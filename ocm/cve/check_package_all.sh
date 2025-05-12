@@ -45,8 +45,11 @@ while IFS= read -r line; do
         # Check if the binary exists
         if [ -f "$BINARY_PATH" ]; then
             # Run the go version -m command and grep for the package name
+            echo "============================="
             echo "Checking for package: $PACKAGE_NAME in binary: $BINARY_PATH"
+            echo "go version -m $BINARY_PATH | grep $PACKAGE_NAME"
             go version -m "$BINARY_PATH" | grep "$PACKAGE_NAME"
+            echo "============================="
         else
             echo "Binary not found at path: $BINARY_PATH"
         fi

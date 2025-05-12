@@ -1,14 +1,18 @@
-quay.io/acm-d/registration-operator-rhel9@sha256:45ecc66157ab4455a7cbcfb5f875dd5760e7f2f7a108d398603769b5f818962e /registration-operator golang.org/x/crypto 
+quay.io/acm-d/registration-operator-rhel9@sha256:45ecc66157ab4455a7cbcfb5f875dd5760e7f2f7a108d398603769b5f818962e /registration-operator golang.org/x/crypto
 quay.io/acm-d/registration-operator-rhel9@sha256:45ecc66157ab4455a7cbcfb5f875dd5760e7f2f7a108d398603769b5f818962e /registration-operator golang.org/x/oauth2
-quay.io/acm-d/addon-manager-rhel9@sha256:c84c988812c9632c6aef9ecd6935830d3811bb5de1abb56b56cfcf995f822f48 /addon golang.org/x/crypto 
+quay.io/acm-d/addon-manager-rhel9@sha256:c84c988812c9632c6aef9ecd6935830d3811bb5de1abb56b56cfcf995f822f48 /addon golang.org/x/crypto
 quay.io/acm-d/addon-manager-rhel9@sha256:c84c988812c9632c6aef9ecd6935830d3811bb5de1abb56b56cfcf995f822f48 /addon golang.org/x/oauth2
-quay.io/acm-d/placement-rhel9@sha256:4b03fc8d5c04b7f90baa5f9f1ee704131f3267b6447e5658a030fd5d2466e935 /placement golang.org/x/crypto 
+quay.io/acm-d/placement-rhel9@sha256:4b03fc8d5c04b7f90baa5f9f1ee704131f3267b6447e5658a030fd5d2466e935 /placement golang.org/x/crypto
 quay.io/acm-d/placement-rhel9@sha256:4b03fc8d5c04b7f90baa5f9f1ee704131f3267b6447e5658a030fd5d2466e935 /placement golang.org/x/oauth2
-quay.io/acm-d/registration-rhel9@sha256:52ea2484283004a06ed296bed1a06480fcf2b2e9785c802513e01a50e1e199bb /registration golang.org/x/crypto 
+quay.io/acm-d/registration-rhel9@sha256:52ea2484283004a06ed296bed1a06480fcf2b2e9785c802513e01a50e1e199bb /registration golang.org/x/crypto
 quay.io/acm-d/registration-rhel9@sha256:52ea2484283004a06ed296bed1a06480fcf2b2e9785c802513e01a50e1e199bb /registration golang.org/x/oauth2
-quay.io/acm-d/work-rhel9@sha256:9fd7613da1ccb88c002b3251641290242bc80ddc0ebeaa2b84c628424ce65cf2 /work golang.org/x/crypto 
+quay.io/acm-d/work-rhel9@sha256:9fd7613da1ccb88c002b3251641290242bc80ddc0ebeaa2b84c628424ce65cf2 /work golang.org/x/crypto
 quay.io/acm-d/work-rhel9@sha256:9fd7613da1ccb88c002b3251641290242bc80ddc0ebeaa2b84c628424ce65cf2 /work golang.org/x/oauth2
-quay.io/acm-d/managed-serviceaccount-rhel9@sha256:f5f82cf526b28018075934b86280a2334f224958f406336c6c4207dde861fce4 /msa golang.org/x/crypto 
+quay.io/acm-d/managed-serviceaccount-rhel9@sha256:f5f82cf526b28018075934b86280a2334f224958f406336c6c4207dde861fce4 /msa golang.org/x/crypto
 quay.io/acm-d/managed-serviceaccount-rhel9@sha256:f5f82cf526b28018075934b86280a2334f224958f406336c6c4207dde861fce4 /msa golang.org/x/oauth2
-clusterproxy TODO TODO
+cluster-proxy-addon /proxy-server
+cluster-proxy-addon /proxy-agent
+cluster-proxy-addon /cluster-proxy
+cluster-proxy /manager
+cluster-proxy /agent
 a b c
