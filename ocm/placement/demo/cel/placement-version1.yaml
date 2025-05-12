@@ -1,8 +1,7 @@
-#  clusteradm clusterset bind global --namespace default
 apiVersion: cluster.open-cluster-management.io/v1beta1
 kind: Placement
 metadata:
-  name: placement1
+  name: placement-version1
   namespace: default
 spec:
   clusterSets:
@@ -16,4 +15,6 @@ spec:
   - requiredClusterSelector:
       celSelector:
         celExpressions:
-          - managedCluster.metadata.labels["test"] == "true"
+          - managedCluster.status.version.kubernetes == "v1.31.0"
+#          - managedCluster.metadata.labels["openshiftVersion"] == "4.16.0"
+#          - managedCluster.status.clusterClaims.exists(c, c.name == "kubeversion.open-cluster-management.io" && c.value == "v1.31.0")

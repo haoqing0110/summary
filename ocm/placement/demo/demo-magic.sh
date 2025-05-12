@@ -16,6 +16,8 @@ TYPE_SPEED=20
 
 # no wait after "p" or "pe"
 NO_WAIT=false
+# display command without waiting
+NO_WAIT_DISPLAY_CMD=false
 
 # if > 0, will pause for this amount of seconds before automatically proceeding with any p or pe
 PROMPT_TIMEOUT=0
@@ -33,14 +35,15 @@ CYAN="\033[0;36m"
 RED="\033[0;31m"
 PURPLE="\033[0;35m"
 BROWN="\033[0;33m"
-WHITE="\033[1;37m"
+WHITE="\033[0;37m"
+BOLD="\033[1m"
 COLOR_RESET="\033[0m"
 
 C_NUM=0
 
 # prompt and command color which can be overriden
 DEMO_PROMPT="$ "
-DEMO_CMD_COLOR=$WHITE
+DEMO_CMD_COLOR=$BOLD
 DEMO_COMMENT_COLOR=$GREY
 
 ##
@@ -97,7 +100,7 @@ function p() {
   fi
 
   # wait for the user to press a key before typing the command
-  if [ $NO_WAIT = false ]; then
+  if [ "$NO_WAIT" = false ] && [ "$NO_WAIT_DISPLAY_CMD" = false ]; then
     wait
   fi
 
@@ -154,6 +157,31 @@ function cmd() {
   printf "$x\033[0m"
   read command
   run_cmd "${command}"
+}
+
+##
+# Enters script into repl mode
+#
+# and allows newly typed commands to be executed within the script
+#
+# type exit to leave the repl
+#
+# usage : repl
+#
+##
+function repl() {
+  # render the prompt
+  looping=true
+  while $looping; do
+    x=$(PS1="$DEMO_PROMPT" "$BASH" --norc -i </dev/null 2>&1 | sed -n '${s/^\(.*\)exit$/\1/p;}')
+    printf "$x\033[0m"
+    read command
+    if [[ "$command" == "exit" ]]; then
+      looping=false
+    else
+      run_cmd "$command"
+    fi
+  done
 }
 
 function run_cmd() {
@@ -218,7 +246,6 @@ while getopts ":dhncw:" opt; do
   esac
 done
 
-echo "type speed: $TYPE_SPEED"
 ##
 # Do not check for pv. This trusts the user to not set TYPE_SPEED later in the
 # demo in which case an error will occur if pv is not installed.

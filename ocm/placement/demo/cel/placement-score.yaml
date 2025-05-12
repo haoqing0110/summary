@@ -1,8 +1,7 @@
-#  clusteradm clusterset bind global --namespace default
 apiVersion: cluster.open-cluster-management.io/v1beta1
 kind: Placement
 metadata:
-  name: placement2
+  name: placement-score
   namespace: default
 spec:
   clusterSets:
@@ -16,4 +15,4 @@ spec:
   - requiredClusterSelector:
       celSelector:
         celExpressions:
-          - managedCluster.metadata.labels["test"] == "false"
+          - managedCluster.scores("resource-usage-score").filter(s, s.name == 'memNodeAvailable').all(e, e.value > 0)

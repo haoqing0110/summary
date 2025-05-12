@@ -1,8 +1,7 @@
-#  clusteradm clusterset bind global --namespace default
 apiVersion: cluster.open-cluster-management.io/v1beta1
 kind: Placement
 metadata:
-  name: placement-invalid
+  name: placement-version2
   namespace: default
 spec:
   clusterSets:
@@ -16,5 +15,4 @@ spec:
   - requiredClusterSelector:
       celSelector:
         celExpressions:
-          - aaa.bbb
-
+          - managedCluster.metadata.labels["openshiftVersion"].matches('^4\\.(15|16)\\.\\d+$')
