@@ -38,7 +38,7 @@ kubectl label managedcluster cluster2 openshiftVersion=4.17.0
 clear 
 pe "kubectl get mcl --show-labels"
 # Show the basic placements
-p "1. The user can select clusters by version listed in ManagedCluster labels, status.version or status.clusterClaims."
+p "1. The user can use any ManagedCluster fields to select clusters."
 pe "cat placement-version1.yaml"
 pe "kubectl apply -f placement-version1.yaml"
 pe "clusteradm get placements -otable"
@@ -47,15 +47,19 @@ p "2. The user can use CEL Standard macros and Standard functions to select clus
 pe "cat placement-version2.yaml"
 pe "kubectl apply -f placement-version2.yaml"
 pe "clusteradm get placements -otable"
+pe "kubectl get mcl --show-labels"
 
 pe "cat placement-version3.yaml"
 pe "kubectl apply -f placement-version3.yaml"
 pe "clusteradm get placements -otable"
+pe "kubectl get mcl --show-labels"
 
 p "3. The user can use CEL to select clusters by AddonPlacementScore."
 pe "cat placement-score.yaml"
 pe "kubectl apply -f placement-score.yaml"
 pe "clusteradm get placements -otable"
+pe "oc get addonplacementscore -A"
+pe "oc get addonplacementscore -A -oyaml"
 
 p "4. Invalid CEL expressions."
 pe "cat placement-invalid.yaml"

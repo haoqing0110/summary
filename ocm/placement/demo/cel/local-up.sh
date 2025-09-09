@@ -35,7 +35,10 @@ kubectl config use-context ${hubctx}
 
 echo "Install resource-usage-collect-addon"
 git clone git@github.com:open-cluster-management-io/addon-contrib.git || true
-cd addon-contrib/resource-usage-collect-addon
-make deploy
+cd addon-contrib/resource-usage-collect-addon/chart
+helm install resource-usage-collect-addon . \
+  --namespace open-cluster-management-addon \
+  --create-namespace \
+  --set global.image.repository=quay.io/haoqing/resource-usage-collect-addon
 cd -
 rm -rf addon-contrib
