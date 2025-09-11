@@ -1,0 +1,18 @@
+# GitHub Research Tracking Data
+
+This folder contains tracking configurations and raw data.
+Each file is saved as `repos-YYYY-MM-DD.json` with:
+- Repository monitoring settings
+- Keyword performance metrics
+- Historical activity data
+- Automated monitoring configurations
+
+Repositories to monitor:
+- kubernetes/kubernetes
+- open-cluster-management-io/ocm
+- kubernetes-sigs/kueue
+
+Keywords to track:
+- "multi-cluster"
+- "scheduling"
+- "multikueue"
