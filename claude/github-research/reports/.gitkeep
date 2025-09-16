@@ -1,0 +1,8 @@
+# GitHub Research Reports
+
+This folder contains analysis reports from GitHub repository monitoring.
+Each report is saved as `analysis-YYYY-MM-DD.md` with:
+- Relevance-scored issues and PRs
+- Trending topics across repositories  
+- Breaking changes and critical updates
+- Action items prioritized by urgency

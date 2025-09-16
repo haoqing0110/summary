@@ -1,0 +1,180 @@
+{
+  "trackingConfig": {
+    "created": "2025-09-12",
+    "purpose": "OCM Kueue Addon upstream monitoring configuration",
+    "maintainer": "Qing Hao",
+    "lastUpdated": "2025-09-12"
+  },
+  "repositories": {
+    "kubernetes-sigs/kueue": {
+      "priority": "HIGH",
+      "monitoring": "daily",
+      "watchSettings": {
+        "subscribed": true,
+        "ignored": false,
+        "reason": "multikueue-ocm-integration"
+      },
+      "keywords": [
+        "multikueue",
+        "cluster-profile",
+        "ClusterProfile", 
+        "workload-revaluation",
+        "preemption",
+        "KEP-693"
+      ],
+      "labels": [
+        "area/multikueue",
+        "kind/bug",
+        "kind/feature",
+        "sig/scheduling"
+      ],
+      "criticalIssues": [
+        "#6786",
+        "#6732", 
+        "#6790",
+        "#6788"
+      ],
+      "alertThresholds": {
+        "breakingChanges": "immediate",
+        "securityPatches": "immediate",
+        "apiModifications": "immediate",
+        "bugFixes": "daily"
+      }
+    },
+    "kubernetes/kubernetes": {
+      "priority": "MEDIUM",
+      "monitoring": "weekly",
+      "watchSettings": {
+        "subscribed": false,
+        "ignored": true,
+        "reason": "too-noisy-use-filtered-searches"
+      },
+      "keywords": [
+        "scheduler",
+        "cluster-scoped",
+        "multi-cluster",
+        "addon"
+      ],
+      "labels": [
+        "sig/scheduling",
+        "sig/cluster-lifecycle"
+      ],
+      "focusAreas": [
+        "scheduling API changes",
+        "cluster-scoped resources", 
+        "authentication/authorization updates"
+      ]
+    },
+    "open-cluster-management-io/ocm": {
+      "priority": "MONITOR",
+      "monitoring": "weekly",
+      "watchSettings": {
+        "subscribed": true,
+        "ignored": false,
+        "reason": "addon-framework-updates"
+      },
+      "keywords": [
+        "kueue",
+        "scheduling",
+        "workload",
+        "addon-framework"
+      ],
+      "focusAreas": [
+        "cross-project collaboration",
+        "addon framework updates",
+        "scheduling system integration"
+      ]
+    }
+  },
+  "searchQueries": {
+    "daily": [
+      "repo:kubernetes-sigs/kueue (multikueue OR \"multi kueue\" OR ClusterProfile) is:issue state:open updated:>1d",
+      "repo:kubernetes-sigs/kueue (multikueue OR \"multi kueue\") is:pr state:open updated:>1d",
+      "repo:kubernetes-sigs/kueue (multikueue OR ClusterProfile) (bug OR regression OR \"breaking change\") updated:>2d"
+    ],
+    "weekly": [
+      "repo:kubernetes/kubernetes label:sig/scheduling (API OR deprecation OR \"breaking change\") updated:>7d",
+      "repo:open-cluster-management-io/ocm (addon OR kueue OR scheduling) updated:>7d",
+      "repo:kubernetes-sigs/kueue label:kind/feature (multikueue OR \"multi cluster\") updated:>7d"
+    ]
+  },
+  "automation": {
+    "githubActions": {
+      "dailyMonitoring": {
+        "schedule": "0 8 * * MON-FRI",
+        "enabled": true
+      },
+      "weeklySummary": {
+        "schedule": "0 18 * * FRI", 
+        "enabled": true
+      }
+    },
+    "notifications": {
+      "slack": {
+        "critical": "immediate",
+        "important": "daily_digest",
+        "informational": "weekly_summary"
+      },
+      "email": {
+        "critical": "immediate",
+        "important": "disabled",
+        "informational": "disabled"
+      }
+    }
+  },
+  "keywordPerformance": {
+    "highValue": {
+      "multikueue": {
+        "accuracy": "100%",
+        "falsePositives": "low",
+        "alternativeTerms": ["multi kueue", "multi-kueue", "MultiKueue"]
+      },
+      "ClusterProfile": {
+        "accuracy": "95%",
+        "contextClues": ["KEP-693", "cluster profile", "profile integration"],
+        "relevanceScore": "high"
+      },
+      "workload": {
+        "accuracy": "80%",
+        "contextFilters": ["scheduling", "queue", "resource"],
+        "falsePositiveFilters": ["-documentation", "-example"]
+      }
+    }
+  },
+  "escalationLevels": {
+    "monitor": {
+      "color": "green",
+      "frequency": "weekly",
+      "action": "continue standard monitoring"
+    },
+    "attention": {
+      "color": "yellow", 
+      "frequency": "daily",
+      "action": "increase monitoring, update stakeholders"
+    },
+    "critical": {
+      "color": "red",
+      "frequency": "real-time",
+      "action": "emergency meeting, impact assessment"
+    },
+    "emergency": {
+      "color": "red-alert",
+      "frequency": "continuous",
+      "action": "immediate security assessment"
+    }
+  },
+  "metrics": {
+    "successIndicators": {
+      "earlyDetection": "24 hours",
+      "relevanceScore": ">90%",
+      "responseTime": "48 hours",
+      "planningAccuracy": "quarterly"
+    },
+    "reviewQuestions": [
+      "How did MultiKueue developments affect OCM addon timeline?",
+      "Which upstream changes required immediate OCM modifications?",
+      "Are we catching the right balance of updates?",
+      "How accurate were MultiKueue production readiness predictions?"
+    ]
+  }
+}
